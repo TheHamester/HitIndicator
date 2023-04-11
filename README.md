@@ -4,6 +4,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This can be used in any modpack without asking for premission as long as you give substantial credit, aka, a little more credit just having the mod in the Relations tab.
 
+[Curse Forge](https://www.curseforge.com/minecraft/mc-mods/hit-indication)
+
 # Changelog
 
 ## Update 1.1
