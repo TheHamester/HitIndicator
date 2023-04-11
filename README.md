@@ -8,6 +8,11 @@
 
 # Changelog
 
+## Patch 1.1.1
+
+* Fixed bug where attacks that would temporarily disable shield, such as with a Vindicator's attack, wouldn't show a block indicator.
+* If you have the Heavy damage makes indicator larger config on, attacks that disable shield will cause the block indicator to be double the normal size.
+
 ## Update 1.1
 * Added scale customization in configs.
 * Added an optional config which makes indicators for heavy hits larger.

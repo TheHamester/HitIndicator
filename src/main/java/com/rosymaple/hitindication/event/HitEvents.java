@@ -18,8 +18,8 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -49,7 +49,7 @@ public class HitEvents {
     }
 
     @SubscribeEvent
-    public static void onBlock(LivingHurtEvent event) {
+    public static void onBlock(LivingAttackEvent event) {
         if(!(event.getEntityLiving() instanceof EntityPlayerMP)
                 || !(event.getSource().getTrueSource() instanceof EntityLiving)
                 || event.getSource().getImmediateSource() instanceof EntityPotion)
@@ -63,9 +63,12 @@ public class HitEvents {
             return;
 
         boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
+        boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), player.getActiveItemStack(), player, source);
         if(playerIsBlocking && HitIndicatorConfig.ShowBlueIndicators) {
-            hits.addHit(player, source, Indicator.BLUE, 0);
+            hits.addHit(player, source, Indicator.BLUE, shieldAboutToBreak ? 125 : 0);
         }
+
+
 
     }
 

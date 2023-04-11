@@ -3,7 +3,7 @@
   "modid": "hitindication",
   "name": "Hit Indication",
   "description": "Adds configurable hit indicators.",
-  "version": "1.1",
+  "version": "1.1.1",
   "mcversion": "1.12.2",
   "url": "https://www.curseforge.com/minecraft/mc-mods/hit-indication",
   "updateUrl": "",
