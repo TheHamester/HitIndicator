@@ -5,27 +5,51 @@ import com.rosymaple.hitindication.capability.latesthits.Indicator;
 import com.rosymaple.hitindication.capability.latesthits.LatestHits;
 import com.rosymaple.hitindication.capability.latesthits.LatestHitsProvider;
 import com.rosymaple.hitindication.config.HitIndicatorConfig;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.potion.PotionUtils;
+import net.minecraft.util.CombatRules;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mod.EventBusSubscriber(modid = HitIndication.MODID)
 public class HitEvents {
     @SubscribeEvent
-    public static void onAttack(LivingHurtEvent event) {
+    public static void onAttack(LivingDamageEvent event) {
+        if(!(event.getEntityLiving() instanceof EntityPlayerMP)
+                || !(event.getSource().getTrueSource() instanceof EntityLiving)
+                || event.getSource().getImmediateSource() instanceof EntityPotion)
+            return;
+
+        EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
+        EntityLiving source = (EntityLiving)event.getSource().getTrueSource();
+
+        int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
+
+        LatestHits hits = player.getCapability(LatestHitsProvider.LATEST_HITS, null);
+        if(hits == null)
+            return;
+
+        hits.addHit(player, source, Indicator.RED, damagePercent);
+    }
+
+    @SubscribeEvent
+    public static void onBlock(LivingHurtEvent event) {
         if(!(event.getEntityLiving() instanceof EntityPlayerMP)
                 || !(event.getSource().getTrueSource() instanceof EntityLiving)
                 || event.getSource().getImmediateSource() instanceof EntityPotion)
@@ -40,11 +64,9 @@ public class HitEvents {
 
         boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
         if(playerIsBlocking && HitIndicatorConfig.ShowBlueIndicators) {
-            hits.addHit(player, source, Indicator.BLUE);
-            return;
+            hits.addHit(player, source, Indicator.BLUE, 0);
         }
 
-        hits.addHit(player, source, Indicator.RED);
     }
 
     @SubscribeEvent
@@ -67,6 +89,9 @@ public class HitEvents {
                         || x.getPotion() == MobEffects.INSTANT_DAMAGE
                         || x.getPotion() == MobEffects.WITHER);
 
+        int damagePercent = 0;
+        Optional<PotionEffect> instantDamage = PotionUtils.getEffectsFromStack(potion.getPotion())
+                .stream().filter((x) -> x.getPotion() == MobEffects.INSTANT_DAMAGE).findFirst();
         for(EntityPlayerMP player : list) {
             if(!player.canBeHitWithPotion())
                 continue;
@@ -75,8 +100,13 @@ public class HitEvents {
             if (hits == null)
                 continue;
 
-            if(damagingPotion || (hasNegativeEffects && HitIndicatorConfig.DisplayHitsFromNegativePotions))
-                hits.addHit(player, source, Indicator.RED);
+            if(damagingPotion || (hasNegativeEffects && HitIndicatorConfig.DisplayHitsFromNegativePotions)) {
+                if(instantDamage.isPresent()) {
+                    damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
+                }
+
+                hits.addHit(player, source, Indicator.RED, damagePercent);
+            }
 
         }
     }
@@ -112,6 +142,40 @@ public class HitEvents {
         }
 
         return false;
+    }
+
+    private static float applyPotionDamageCalculations(EntityPlayerMP player, DamageSource source, float damage)
+    {
+        if (source.isDamageAbsolute())
+        {
+            return damage;
+        }
+        else
+        {
+            if (player.isPotionActive(MobEffects.RESISTANCE) && source != DamageSource.OUT_OF_WORLD)
+            {
+                int i = (player.getActivePotionEffect(MobEffects.RESISTANCE).getAmplifier() + 1) * 5;
+                int j = 25 - i;
+                float f = damage * (float)j;
+                damage = f / 25.0F;
+            }
+
+            if (damage <= 0.0F)
+            {
+                return 0.0F;
+            }
+            else
+            {
+                int k = EnchantmentHelper.getEnchantmentModifierDamage(player.getArmorInventoryList(), source);
+
+                if (k > 0)
+                {
+                    damage = CombatRules.getDamageAfterMagicAbsorb(damage, (float)k);
+                }
+
+                return damage;
+            }
+        }
     }
 
 

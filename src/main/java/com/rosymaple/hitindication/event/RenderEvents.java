@@ -12,6 +12,7 @@ import net.minecraft.client.gui.ScaledResolution;
 
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -20,14 +21,13 @@ import org.lwjgl.opengl.GL11;
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-
 @Mod.EventBusSubscriber(modid = HitIndication.MODID)
 public class RenderEvents {
     private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
     private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
-    private static final ResourceLocation INDICATOR_GREEN = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_green.png");
-    private static final ResourceLocation INDICATOR_YELLOW = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_yellow.png");
 
+    private static final int textureWidth = 42;
+    private static final int textureHeight = 13;
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
@@ -57,6 +57,15 @@ public class RenderEvents {
                 : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f;
         opacity /= 100.0f;
 
+        float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
+        int scaledTextureWidth = (int)Math.floor(textureWidth * defaultScale);
+        int scaledTextureHeight = (int)Math.floor(textureHeight * defaultScale);
+        if(HitIndicatorConfig.SizeDependsOnDamage) {
+            float scale = MathHelper.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
+            scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
+            scaledTextureHeight = (int)Math.floor(scaledTextureHeight* scale);
+        }
+
         bindIndicatorTexture(textureManager, hit.getIndicator());
 
         GL11.glPushMatrix();
@@ -64,7 +73,7 @@ public class RenderEvents {
         GL11.glTranslatef(screenMiddleX, screenMiddleY, 0);
         GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
-        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - 21, screenMiddleY - 37 , 0, 0, 42, 13, 42, 13);
+        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - 30 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }

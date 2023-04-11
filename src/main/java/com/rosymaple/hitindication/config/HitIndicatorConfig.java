@@ -22,6 +22,8 @@ public class HitIndicatorConfig {
     public static int FadeRate;
     public static int IndicatorOpacity;
     public static boolean ShowBlueIndicators;
+    public static boolean SizeDependsOnDamage;
+    public static int IndicatorDefaultScale;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -64,16 +66,29 @@ public class HitIndicatorConfig {
         indicatorOpacity.setMinValue(0);
         indicatorOpacity.setMaxValue(100);
 
+        Property indicatorDefaultScale = config.get(CATEGORY_NAME_INDICATOR, "indicator_default_scale", 25);
+        indicatorDefaultScale.setLanguageKey("gui.config.indicators.indicator_default_scale");
+        indicatorDefaultScale.setComment(I18n.format("gui.config.indicators.indicator_default_scale.comment"));
+        indicatorDefaultScale.setMinValue(0);
+        indicatorDefaultScale.setMaxValue(100);
+
         Property displayBlueIndicators = config.get(CATEGORY_NAME_INDICATOR, "display_blue_indicators", true);
         displayBlueIndicators.setLanguageKey("gui.config.indicators.display_blue_indicators");
         displayBlueIndicators.setComment(I18n.format("gui.config.indicators.display_blue_indicators.comment"));
 
+        Property sizeDependsOnDamage = config.get(CATEGORY_NAME_INDICATOR, "size_depends_on_damage", false);
+        sizeDependsOnDamage.setLanguageKey("gui.config.indicators.size_depends_on_damage");
+        sizeDependsOnDamage.setComment(I18n.format("gui.config.indicators.size_depends_on_damage.comment"));
+
+
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(maxIndicatorCount.getName());
         propertyOrderIndicators.add(displayHitsFromNegativePotions.getName());
+        propertyOrderIndicators.add(displayBlueIndicators.getName());
         propertyOrderIndicators.add(fadeRate.getName());
         propertyOrderIndicators.add(indicatorOpacity.getName());
-        propertyOrderIndicators.add(displayBlueIndicators.getName());
+        propertyOrderIndicators.add(indicatorDefaultScale.getName());
+        propertyOrderIndicators.add(sizeDependsOnDamage.getName());
         config.setCategoryPropertyOrder(CATEGORY_NAME_INDICATOR, propertyOrderIndicators);
 
         if(readFromConfigFile) {
@@ -82,6 +97,8 @@ public class HitIndicatorConfig {
             FadeRate = fadeRate.getInt();
             IndicatorOpacity = indicatorOpacity.getInt();
             ShowBlueIndicators = displayBlueIndicators.getBoolean();
+            SizeDependsOnDamage = sizeDependsOnDamage.getBoolean();
+            IndicatorDefaultScale = indicatorDefaultScale.getInt();
         }
 
         maxIndicatorCount.set(MaxIndicatorCount);
@@ -89,6 +106,8 @@ public class HitIndicatorConfig {
         fadeRate.set(FadeRate);
         indicatorOpacity.set(IndicatorOpacity);
         displayBlueIndicators.set(ShowBlueIndicators);
+        indicatorDefaultScale.set(IndicatorDefaultScale);
+        sizeDependsOnDamage.set(SizeDependsOnDamage);
 
         if(config.hasChanged())
             config.save();

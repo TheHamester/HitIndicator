@@ -11,16 +11,17 @@ public class AddHitS2CPacket implements IMessage {
     double x;
     double y;
     double z;
-    int lifeTime;
     int indicatorType;
+    int damagePercent;
 
     public AddHitS2CPacket() {}
 
-    public AddHitS2CPacket(double x, double y, double z, int indicatorType) {
+    public AddHitS2CPacket(double x, double y, double z, int indicatorType, int damagePercent) {
         this.x = x;
         this.y = y;
         this.z = z;
         this.indicatorType = indicatorType;
+        this.damagePercent = damagePercent;
     }
 
     @Override
@@ -29,6 +30,7 @@ public class AddHitS2CPacket implements IMessage {
         y = buf.readDouble();
         z = buf.readDouble();
         indicatorType = buf.readInt();
+        damagePercent = buf.readInt();
     }
 
     @Override
@@ -37,6 +39,7 @@ public class AddHitS2CPacket implements IMessage {
         buf.writeDouble(y);
         buf.writeDouble(z);
         buf.writeInt(indicatorType);
+        buf.writeInt(damagePercent);
     }
 
     public static class Handler implements IMessageHandler<AddHitS2CPacket, IMessage> {
@@ -47,7 +50,7 @@ public class AddHitS2CPacket implements IMessage {
         }
 
         private void handle(AddHitS2CPacket message, MessageContext ctx) {
-            ClientLatestHits.add(message.x, message.y, message.z, message.indicatorType);
+            ClientLatestHits.add(message.x, message.y, message.z, message.indicatorType, message.damagePercent);
         }
     }
 }

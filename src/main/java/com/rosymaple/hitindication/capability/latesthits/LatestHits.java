@@ -19,15 +19,16 @@ public class LatestHits {
 
     LatestHits() { }
 
-    public void addHit(EntityPlayerMP player, EntityLiving damageSource, Indicator indicator) {
-        latestHits.add(new Hit(damageSource.posX, damageSource.posY, damageSource.posZ, indicator));
+    public void addHit(EntityPlayerMP player, EntityLiving damageSource, Indicator indicator, int damagePercent) {
+        latestHits.add(new Hit(damageSource.posX, damageSource.posY, damageSource.posZ, indicator, damagePercent));
         if(HitIndicatorConfig.MaxIndicatorCount > 0 && latestHits.size() > HitIndicatorConfig.MaxIndicatorCount)
             latestHits.remove(0);
 
         ModPackets.sendToPlayer(new AddHitS2CPacket(damageSource.posX,
                         damageSource.posY,
                         damageSource.posZ,
-                        indicator.type),
+                        indicator.type,
+                        damagePercent),
                 player);
     }
 
