@@ -6,7 +6,7 @@ import com.rosymaple.hitindication.capability.latesthits.LatestHits;
 import com.rosymaple.hitindication.capability.latesthits.LatestHitsProvider;
 import com.rosymaple.hitindication.config.HitIndicatorConfig;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.projectile.EntityPotion;
 import net.minecraft.init.MobEffects;
@@ -32,12 +32,12 @@ public class HitEvents {
     @SubscribeEvent
     public static void onAttack(LivingDamageEvent event) {
         if(!(event.getEntityLiving() instanceof EntityPlayerMP)
-                || !(event.getSource().getTrueSource() instanceof EntityLiving)
+                || !(event.getSource().getTrueSource() instanceof EntityLivingBase)
                 || event.getSource().getImmediateSource() instanceof EntityPotion)
             return;
 
         EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
-        EntityLiving source = (EntityLiving)event.getSource().getTrueSource();
+        EntityLivingBase source = (EntityLivingBase)event.getSource().getTrueSource();
 
         int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
 
@@ -45,18 +45,18 @@ public class HitEvents {
         if(hits == null)
             return;
 
-        hits.addHit(player, source, Indicator.RED, damagePercent);
+        hits.addHit(player, source, Indicator.RED, damagePercent, false);
     }
 
     @SubscribeEvent
     public static void onBlock(LivingAttackEvent event) {
         if(!(event.getEntityLiving() instanceof EntityPlayerMP)
-                || !(event.getSource().getTrueSource() instanceof EntityLiving)
+                || !(event.getSource().getTrueSource() instanceof EntityLivingBase)
                 || event.getSource().getImmediateSource() instanceof EntityPotion)
             return;
 
         EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
-        EntityLiving source = (EntityLiving)event.getSource().getTrueSource();
+        EntityLivingBase source = (EntityLivingBase)event.getSource().getTrueSource();
 
         LatestHits hits = player.getCapability(LatestHitsProvider.LATEST_HITS, null);
         if(hits == null)
@@ -65,16 +65,13 @@ public class HitEvents {
         boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
         boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), player.getActiveItemStack(), player, source);
         if(playerIsBlocking && HitIndicatorConfig.ShowBlueIndicators) {
-            hits.addHit(player, source, Indicator.BLUE, shieldAboutToBreak ? 125 : 0);
+            hits.addHit(player, source, Indicator.BLUE, shieldAboutToBreak ? 125 : 0, false);
         }
-
-
-
     }
 
     @SubscribeEvent
     public static void onPotion(ProjectileImpactEvent.Throwable event) {
-        if(!(event.getThrowable().getThrower() instanceof EntityLiving)
+        if(event.getThrowable().getThrower() == null
                 ||!(event.getThrowable().getThrower().getEntityWorld() instanceof WorldServer)
                 || !(event.getThrowable() instanceof EntityPotion))
             return;
@@ -82,7 +79,7 @@ public class HitEvents {
         AxisAlignedBB axisalignedbb = event.getThrowable().getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
         List<EntityPlayerMP> list = event.getThrowable().world.getEntitiesWithinAABB(EntityPlayerMP.class, axisalignedbb);
 
-        EntityLiving source = (EntityLiving)event.getThrowable().getThrower();
+        EntityLivingBase source = event.getThrowable().getThrower();
         EntityPotion potion = (EntityPotion)event.getThrowable();
 
         boolean hasNegativeEffects = PotionUtils.getEffectsFromStack(potion.getPotion())
@@ -103,12 +100,12 @@ public class HitEvents {
             if (hits == null)
                 continue;
 
-            if(damagingPotion || (hasNegativeEffects && HitIndicatorConfig.DisplayHitsFromNegativePotions)) {
+            if(damagingPotion || hasNegativeEffects) {
                 if(instantDamage.isPresent()) {
                     damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
                 }
 
-                hits.addHit(player, source, Indicator.RED, damagePercent);
+                hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects);
             }
 
         }

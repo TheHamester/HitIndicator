@@ -1,18 +1,27 @@
 package com.rosymaple.hitindication.capability.latesthits;
 
 import com.rosymaple.hitindication.config.HitIndicatorConfig;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 
+@SideOnly(Side.CLIENT)
 public class ClientLatestHits {
     public static ArrayList<Hit> latestHits = new ArrayList<>();
 
-    public static void add(double x, double y, double z, int type, int damagePercent) {
+    public static void add(double x, double y, double z, int type, int damagePercent, boolean hasNegativeEffects) {
         Indicator indicator;
         switch(type) {
             case 1: indicator = Indicator.BLUE; break;
             default: indicator = Indicator.RED; break;
         }
+
+        if(indicator == Indicator.BLUE && !HitIndicatorConfig.ShowBlueIndicators)
+            return;
+
+        if(hasNegativeEffects && !HitIndicatorConfig.DisplayHitsFromNegativePotions)
+            return;
 
         latestHits.add(new Hit(x, y, z, indicator, damagePercent));
         if(HitIndicatorConfig.MaxIndicatorCount > 0 && latestHits.size() > HitIndicatorConfig.MaxIndicatorCount)

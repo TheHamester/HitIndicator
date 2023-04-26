@@ -4,7 +4,7 @@ import com.rosymaple.hitindication.config.HitIndicatorConfig;
 import com.rosymaple.hitindication.networking.AddHitS2CPacket;
 import com.rosymaple.hitindication.networking.ModPackets;
 import com.rosymaple.hitindication.networking.TickHitsS2CPacket;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagList;
@@ -19,7 +19,7 @@ public class LatestHits {
 
     LatestHits() { }
 
-    public void addHit(EntityPlayerMP player, EntityLiving damageSource, Indicator indicator, int damagePercent) {
+    public void addHit(EntityPlayerMP player, EntityLivingBase damageSource, Indicator indicator, int damagePercent, boolean hasNegativeEffects) {
         latestHits.add(new Hit(damageSource.posX, damageSource.posY, damageSource.posZ, indicator, damagePercent));
         if(HitIndicatorConfig.MaxIndicatorCount > 0 && latestHits.size() > HitIndicatorConfig.MaxIndicatorCount)
             latestHits.remove(0);
@@ -28,7 +28,8 @@ public class LatestHits {
                         damageSource.posY,
                         damageSource.posZ,
                         indicator.type,
-                        damagePercent),
+                        damagePercent,
+                        hasNegativeEffects),
                 player);
     }
 

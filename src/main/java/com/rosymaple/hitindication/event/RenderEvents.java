@@ -16,12 +16,13 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
 
-@Mod.EventBusSubscriber(modid = HitIndication.MODID)
+@Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Side.CLIENT)
 public class RenderEvents {
     private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
     private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");

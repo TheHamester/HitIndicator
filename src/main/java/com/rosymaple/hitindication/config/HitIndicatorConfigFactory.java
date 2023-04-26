@@ -4,6 +4,7 @@ import com.rosymaple.hitindication.HitIndication;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigElement;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.client.IModGuiFactory;
@@ -43,7 +44,7 @@ public class HitIndicatorConfigFactory implements IModGuiFactory {
         private static List<IConfigElement> getConfigElements() {
             List<IConfigElement> list = new ArrayList<>();
             list.add(new DummyConfigElement.DummyCategoryElement(
-                    I18n.format("gui.config.category.indicators"),
+                    "Indicators",
                     "gui.config.category.indicators",
                     CategoryEntryIndicators.class));
             return list;
@@ -60,7 +61,7 @@ public class HitIndicatorConfigFactory implements IModGuiFactory {
                 Configuration config = HitIndicatorConfig.getConfig();
                 ConfigElement categoryIndicators = new ConfigElement(config.getCategory(HitIndicatorConfig.CATEGORY_NAME_INDICATOR));
                 List<IConfigElement> propertiesOnScreen = categoryIndicators.getChildElements();
-                String windowTitle = I18n.format("gui.config.category.indicators");
+                String windowTitle = "Indicators";
                 return new GuiConfig(owningScreen, propertiesOnScreen,
                         owningScreen.modID,
                         this.configElement.requiresWorldRestart() || this.owningScreen.allRequireWorldRestart,
