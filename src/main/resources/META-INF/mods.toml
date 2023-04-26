@@ -3,7 +3,7 @@ loaderVersion="[36,)"
 license="WTFPL"
 [[mods]]
 modId="hitindication"
-version="1.1.1"
+version="1.1.2"
 displayName="Hit Indication"
 logoFile="Hit_Indication.png"
 credits=""

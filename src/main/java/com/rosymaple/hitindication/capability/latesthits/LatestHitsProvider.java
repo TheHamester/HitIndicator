@@ -1,5 +1,6 @@
 package com.rosymaple.hitindication.capability.latesthits;
 
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.nbt.INBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;

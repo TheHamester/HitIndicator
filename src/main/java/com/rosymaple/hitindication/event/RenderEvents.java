@@ -5,7 +5,7 @@ import com.rosymaple.hitindication.HitIndication;
 import com.rosymaple.hitindication.capability.latesthits.ClientLatestHits;
 import com.rosymaple.hitindication.capability.latesthits.Hit;
 import com.rosymaple.hitindication.capability.latesthits.Indicator;
-import com.rosymaple.hitindication.config.HitIndicatorCommonConfigs;
+import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.client.gui.AbstractGui;
@@ -15,12 +15,13 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.opengl.GL11;
 
-@Mod.EventBusSubscriber(modid = HitIndication.MODID)
+@Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Dist.CLIENT)
 public class RenderEvents {
     private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
     private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
@@ -51,14 +52,14 @@ public class RenderEvents {
         Vector2f diff = new Vector2f((float)(sourceVec3d.x - playerPos.x), (float)(sourceVec3d.z - playerPos.y));
         double angleBetween = angleBetween(lookVec, diff);
         float opacity = hit.getLifeTime() >= 25
-                ? HitIndicatorCommonConfigs.IndicatorOpacity.get()
-                : HitIndicatorCommonConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
+                ? HitIndicatorClientConfigs.IndicatorOpacity.get()
+                : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
         opacity /= 100.0f;
 
-        float defaultScale = 1 + HitIndicatorCommonConfigs.IndicatorDefaultScale.get() / 100.0f;
+        float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
         int scaledTextureWidth = (int)Math.floor(textureWidth * defaultScale);
         int scaledTextureHeight = (int)Math.floor(textureHeight * defaultScale);
-        if(HitIndicatorCommonConfigs.SizeDependsOnDamage.get()) {
+        if(HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
             float scale = MathHelper.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
             scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
             scaledTextureHeight = (int)Math.floor(scaledTextureHeight* scale);

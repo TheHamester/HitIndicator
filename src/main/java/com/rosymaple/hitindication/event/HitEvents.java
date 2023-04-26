@@ -3,7 +3,6 @@ package com.rosymaple.hitindication.event;
 import com.rosymaple.hitindication.HitIndication;
 import com.rosymaple.hitindication.capability.latesthits.Indicator;
 import com.rosymaple.hitindication.capability.latesthits.LatestHitsProvider;
-import com.rosymaple.hitindication.config.HitIndicatorCommonConfigs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -20,7 +19,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -42,7 +40,7 @@ public class HitEvents {
         int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
 
         player.getCapability(LatestHitsProvider.LATEST_HITS, null).ifPresent((hits) -> {
-            hits.addHit(player, source, Indicator.RED, damagePercent);
+            hits.addHit(player, source, Indicator.RED, damagePercent, false);
         });
     }
 
@@ -59,13 +57,10 @@ public class HitEvents {
         player.getCapability(LatestHitsProvider.LATEST_HITS, null).ifPresent((hits) -> {
             boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
             boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), player.getActiveItemStack(), player, source);
-            if(playerIsBlocking && HitIndicatorCommonConfigs.ShowBlueIndicators.get()) {
-                hits.addHit(player, source, Indicator.BLUE, shieldAboutToBreak ? 125 : 0);
+            if(playerIsBlocking) {
+                hits.addHit(player, source, Indicator.BLUE, shieldAboutToBreak ? 125 : 0, false);
             }
         });
-
-
-
     }
 
     @SubscribeEvent
@@ -96,12 +91,12 @@ public class HitEvents {
 
             player.getCapability(LatestHitsProvider.LATEST_HITS, null).ifPresent((hits) -> {
                 int damagePercent = 0;
-                if(damagingPotion || (hasNegativeEffects && HitIndicatorCommonConfigs.DisplayHitsFromNegativePotions.get())) {
+                if(damagingPotion || hasNegativeEffects) {
                     if(instantDamage.isPresent()) {
                         damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
                     }
 
-                    hits.addHit(player, source, Indicator.RED, damagePercent);
+                    hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects);
                 }
             });
         }
