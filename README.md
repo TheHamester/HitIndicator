@@ -8,6 +8,10 @@
 
 # Changelog
 
+## Patch 1.1.2
+* Multiplayer support
+* Potions currently not working for some reason, will be fixed next patch
+
 ## Patch 1.1.1
 
 * Fixed bug where attacks that would temporarily disable shield, such as with a Vindicator's attack, wouldn't show a block indicator.
