@@ -1,7 +1,7 @@
 package com.rosymaple.hitindication.capability.latesthits;
 
 import com.mojang.math.Vector3d;
-import com.rosymaple.hitindication.config.HitIndicatorCommonConfigs;
+import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 
 public class Hit {
     private Vector3d damageSourceLocation;
@@ -13,7 +13,7 @@ public class Hit {
         this.damageSourceLocation = new Vector3d(x, y, z);
         this.indicator = indicator;
         this.damagePercent = damagePercent;
-        lifetime = HitIndicatorCommonConfigs.FadeRate.get();
+        lifetime = HitIndicatorClientConfigs.FadeRate.get();
     }
 
     public Hit(double x, double y, double z, int lifeTime, Indicator indicator, int damagePercent) {

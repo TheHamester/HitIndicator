@@ -1,6 +1,6 @@
 package com.rosymaple.hitindication.capability.latesthits;
 
-import com.rosymaple.hitindication.config.HitIndicatorCommonConfigs;
+import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 import com.rosymaple.hitindication.networking.AddHitS2CPacket;
 import com.rosymaple.hitindication.networking.ModPackets;
 import com.rosymaple.hitindication.networking.TickHitsS2CPacket;
@@ -14,16 +14,17 @@ public class LatestHits {
 
     LatestHits() { }
 
-    public void addHit(ServerPlayer player, LivingEntity damageSource, Indicator indicator, int damagePercent) {
+    public void addHit(ServerPlayer player, LivingEntity damageSource, Indicator indicator, int damagePercent, boolean negativeEffectPotion) {
         latestHits.add(new Hit(damageSource.getX(), damageSource.getY(), damageSource.getZ(), indicator, damagePercent));
-        if(HitIndicatorCommonConfigs.MaxIndicatorCount.get() > 0 && latestHits.size() > HitIndicatorCommonConfigs.MaxIndicatorCount.get())
+        if(HitIndicatorClientConfigs.MaxIndicatorCount.get() > 0 && latestHits.size() > HitIndicatorClientConfigs.MaxIndicatorCount.get())
             latestHits.remove(0);
 
         ModPackets.sendToPlayer(new AddHitS2CPacket(damageSource.getX(),
                         damageSource.getY(),
                         damageSource.getZ(),
                         indicator.type,
-                        damagePercent),
+                        damagePercent,
+                        negativeEffectPotion),
                 player);
     }
 
