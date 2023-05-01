@@ -105,7 +105,7 @@ public class HitEvents {
                     damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
                 }
 
-                hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects);
+                hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects && !damagingPotion);
             }
 
         }
