@@ -33,13 +33,14 @@ import java.util.Optional;
 public class HitEvents {
     @SubscribeEvent
     public static void onAttack(LivingDamageEvent event) {
+        System.out.println(event.getSource().getDirectEntity());
         if(!(event.getEntityLiving() instanceof ServerPlayer)
-                || !(event.getSource().getDirectEntity() instanceof LivingEntity)
+                || !(event.getSource().getEntity() instanceof LivingEntity)
                 || event.getSource().getEntity() instanceof ThrownPotion)
             return;
 
         ServerPlayer player = (ServerPlayer)event.getEntityLiving();
-        LivingEntity source = (LivingEntity)event.getSource().getDirectEntity();
+        LivingEntity source = (LivingEntity)event.getSource().getEntity();
 
         int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
 
@@ -51,12 +52,12 @@ public class HitEvents {
     @SubscribeEvent
     public static void onBlock(LivingAttackEvent event) {
         if(!(event.getEntityLiving() instanceof ServerPlayer)
-                || !(event.getSource().getDirectEntity() instanceof LivingEntity)
+                || !(event.getSource().getEntity() instanceof LivingEntity)
                 || event.getSource().getEntity() instanceof ThrownPotion)
             return;
 
         ServerPlayer player = (ServerPlayer)event.getEntityLiving();
-        LivingEntity source = (LivingEntity)event.getSource().getDirectEntity();
+        LivingEntity source = (LivingEntity)event.getSource().getEntity();
 
         player.getCapability(LatestHitsProvider.LATEST_HITS, null).ifPresent((hits) -> {
             boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
@@ -101,7 +102,7 @@ public class HitEvents {
                         damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
                     }
 
-                    hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects);
+                    hits.addHit(player, source, Indicator.RED, damagePercent, hasNegativeEffects && !damagingPotion);
                 }
             });
         }

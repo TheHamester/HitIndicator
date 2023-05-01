@@ -8,6 +8,10 @@
 
 # Changelog
 
+## Patch 1.1.3
+* Hits from potions now display an indicator
+* Arrows now show an indicator in 1.18.2
+
 ## Patch 1.1.2
 * Multiplayer support
 * Potions currently not working for some reason, will be fixed next patch
