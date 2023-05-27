@@ -13,6 +13,7 @@ public class HitIndicatorClientConfigs {
     public static final ForgeConfigSpec.ConfigValue<Boolean> ShowBlueIndicators;
     public static final ForgeConfigSpec.ConfigValue<Boolean> SizeDependsOnDamage;
     public static final ForgeConfigSpec.ConfigValue<Integer> IndicatorDefaultScale;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> EnableHitMarkers;
 
     static {
         BUILDER.push("Hit Indication Config");
@@ -31,6 +32,8 @@ public class HitIndicatorClientConfigs {
                 .define("Heavy damage makes indicator larger", false);
         IndicatorDefaultScale = BUILDER.comment("Determines scale of indicators.")
                 .defineInRange("Indicator Default Scale (0-100)", 25, 0, 100);
+        EnableHitMarkers = BUILDER.comment("Enables hit markers on crit/kill.")
+                .define("Enable Crit/Kill Markers", false);
 
 
         BUILDER.pop();

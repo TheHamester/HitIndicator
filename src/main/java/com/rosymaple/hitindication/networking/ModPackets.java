@@ -26,23 +26,18 @@ public class ModPackets {
 
         INSTANCE = net;
 
-        net.messageBuilder(AddHitS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(AddHitS2CPacket::new)
-                .encoder(AddHitS2CPacket::toBytes)
-                .consumer(AddHitS2CPacket::handle)
+        net.messageBuilder(AddHitIndicatorS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(AddHitIndicatorS2CPacket::new)
+                .encoder(AddHitIndicatorS2CPacket::toBytes)
+                .consumer(AddHitIndicatorS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(ClearLatestHitsS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(ClearLatestHitsS2CPacket::new)
-                .encoder(ClearLatestHitsS2CPacket::toBytes)
-                .consumer(ClearLatestHitsS2CPacket::handle)
+        net.messageBuilder(SetHitMarkerS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
+                .decoder(SetHitMarkerS2CPacket::new)
+                .encoder(SetHitMarkerS2CPacket::toBytes)
+                .consumer(SetHitMarkerS2CPacket::handle)
                 .add();
 
-        net.messageBuilder(TickHitsS2CPacket.class, id(), NetworkDirection.PLAY_TO_CLIENT)
-                .decoder(TickHitsS2CPacket::new)
-                .encoder(TickHitsS2CPacket::toBytes)
-                .consumer(TickHitsS2CPacket::handle)
-                .add();
     }
 
     public static <MSG> void sendToPlayer(MSG message, ServerPlayer player) {

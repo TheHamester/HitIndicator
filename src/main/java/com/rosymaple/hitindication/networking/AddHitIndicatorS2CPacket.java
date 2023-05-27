@@ -1,12 +1,12 @@
 package com.rosymaple.hitindication.networking;
 
-import com.rosymaple.hitindication.capability.latesthits.ClientLatestHits;
+import com.rosymaple.hitindication.latesthits.ClientLatestHits;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
-public class AddHitS2CPacket {
+public class AddHitIndicatorS2CPacket {
     double x;
     double y;
     double z;
@@ -14,7 +14,7 @@ public class AddHitS2CPacket {
     int damagePercent;
     boolean negativeEffectPotion;
 
-    public AddHitS2CPacket(double x, double y, double z, int indicatorType, int damagePercent, boolean negativeEffectPotion) {
+    public AddHitIndicatorS2CPacket(double x, double y, double z, int indicatorType, int damagePercent, boolean negativeEffectPotion) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -23,7 +23,7 @@ public class AddHitS2CPacket {
         this.negativeEffectPotion = negativeEffectPotion;
     }
 
-    public AddHitS2CPacket(ByteBuf buf) {
+    public AddHitIndicatorS2CPacket(ByteBuf buf) {
         x = buf.readDouble();
         y = buf.readDouble();
         z = buf.readDouble();
@@ -44,7 +44,7 @@ public class AddHitS2CPacket {
     public boolean handle(Supplier<NetworkEvent.Context> supplier) {
         NetworkEvent.Context context = supplier.get();
         context.enqueueWork(() -> {
-            ClientLatestHits.add(x, y, z, indicatorType, damagePercent, negativeEffectPotion);
+            ClientLatestHits.addHitIndicator(x, y, z, indicatorType, damagePercent, negativeEffectPotion);
         });
         return true;
     }
