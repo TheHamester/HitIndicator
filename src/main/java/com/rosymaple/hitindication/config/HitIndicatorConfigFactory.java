@@ -51,7 +51,6 @@ public class HitIndicatorConfigFactory implements IModGuiFactory {
         }
 
         public static class CategoryEntryIndicators extends GuiConfigEntries.CategoryEntry {
-
             public CategoryEntryIndicators(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
                 super(owningScreen, owningEntryList, configElement);
             }

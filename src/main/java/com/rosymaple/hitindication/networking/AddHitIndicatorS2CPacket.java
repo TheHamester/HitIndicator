@@ -1,13 +1,13 @@
 package com.rosymaple.hitindication.networking;
 
-import com.rosymaple.hitindication.capability.latesthits.ClientLatestHits;
+import com.rosymaple.hitindication.latesthits.ClientLatestHits;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-public class AddHitS2CPacket implements IMessage {
+public class AddHitIndicatorS2CPacket implements IMessage {
     double x;
     double y;
     double z;
@@ -15,9 +15,9 @@ public class AddHitS2CPacket implements IMessage {
     int damagePercent;
     boolean hasNegativeEffects;
 
-    public AddHitS2CPacket() {}
+    public AddHitIndicatorS2CPacket() {}
 
-    public AddHitS2CPacket(double x, double y, double z, int indicatorType, int damagePercent, boolean hasNegativeEffects) {
+    public AddHitIndicatorS2CPacket(double x, double y, double z, int indicatorType, int damagePercent, boolean hasNegativeEffects) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -46,15 +46,15 @@ public class AddHitS2CPacket implements IMessage {
         buf.writeBoolean(hasNegativeEffects);
     }
 
-    public static class Handler implements IMessageHandler<AddHitS2CPacket, IMessage> {
+    public static class Handler implements IMessageHandler<AddHitIndicatorS2CPacket, IMessage> {
         @Override
-        public IMessage onMessage(AddHitS2CPacket message, MessageContext ctx) {
+        public IMessage onMessage(AddHitIndicatorS2CPacket message, MessageContext ctx) {
             FMLCommonHandler.instance().getWorldThread(ctx.netHandler).addScheduledTask(() -> handle(message, ctx));
             return null;
         }
 
-        private void handle(AddHitS2CPacket message, MessageContext ctx) {
-            ClientLatestHits.add(message.x, message.y, message.z, message.indicatorType, message.damagePercent, message.hasNegativeEffects);
+        private void handle(AddHitIndicatorS2CPacket message, MessageContext ctx) {
+            ClientLatestHits.addHitIndicator(message.x, message.y, message.z, message.indicatorType, message.damagePercent, message.hasNegativeEffects);
         }
     }
 }

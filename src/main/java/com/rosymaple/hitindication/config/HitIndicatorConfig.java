@@ -25,6 +25,7 @@ public class HitIndicatorConfig {
     public static boolean ShowBlueIndicators;
     public static boolean SizeDependsOnDamage;
     public static int IndicatorDefaultScale;
+    public static boolean EnableHitMarkers;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -75,11 +76,15 @@ public class HitIndicatorConfig {
 
         Property displayBlueIndicators = config.get(CATEGORY_NAME_INDICATOR, "display_blue_indicators", true);
         displayBlueIndicators.setLanguageKey("hitindication.gui.config.indicators.display_blue_indicators");
-        displayBlueIndicators.setComment("Shows blue indicator when the player blocks incoming damage with a shield.\n");
+        displayBlueIndicators.setComment("Shows blue indicator when the player blocks incoming damage with a shield.");
 
         Property sizeDependsOnDamage = config.get(CATEGORY_NAME_INDICATOR, "size_depends_on_damage", false);
         sizeDependsOnDamage.setLanguageKey("hitindication.gui.config.indicators.size_depends_on_damage");
         sizeDependsOnDamage.setComment("Any instance of damage that deals 30 percent or more of max health will result in larger indicators.");
+
+        Property enableHitMarkers = config.get(CATEGORY_NAME_INDICATOR, "enable_hit_markers", false);
+        enableHitMarkers.setLanguageKey("hitindication.gui.config.indicators.enable_hit_markers");
+        enableHitMarkers.setComment("Enables hit markers on crit/kill.");
 
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(maxIndicatorCount.getName());
@@ -89,6 +94,7 @@ public class HitIndicatorConfig {
         propertyOrderIndicators.add(indicatorOpacity.getName());
         propertyOrderIndicators.add(indicatorDefaultScale.getName());
         propertyOrderIndicators.add(sizeDependsOnDamage.getName());
+        propertyOrderIndicators.add(enableHitMarkers.getName());
         config.setCategoryPropertyOrder(CATEGORY_NAME_INDICATOR, propertyOrderIndicators);
 
         if(readFromConfigFile) {
@@ -99,6 +105,7 @@ public class HitIndicatorConfig {
             ShowBlueIndicators = displayBlueIndicators.getBoolean();
             SizeDependsOnDamage = sizeDependsOnDamage.getBoolean();
             IndicatorDefaultScale = indicatorDefaultScale.getInt();
+            EnableHitMarkers = enableHitMarkers.getBoolean();
         }
 
         if(config.hasChanged())

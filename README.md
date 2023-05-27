@@ -8,6 +8,12 @@
 
 # Changelog
 
+## Update 1.2
+* Added hit markers for crits/kills
+* If you do a crit, hit an entity with an arrow or disable a shield via axe it will quickly show a white X at the crosshair.
+* If you kill an entity it will quickly show a red X at the crosshair.
+* Self thrown negative potions no longer shows an indicator.
+
 ## Patch 1.1.3
 * Hits from potions now display an indicator
 * Arrows now show an indicator in 1.18.2
@@ -26,7 +32,7 @@
 * Added an optional config which makes indicators for heavy hits larger.
 
 ## Release 1.0
- * Red Indicators on damage, pointing to intial location of damage source.
+ * Red Indicators on damage, pointing to initial location of damage source.
  * Optional config which displays indicators for non-damaging negative potions.
  * Optional config which displays blue indicator for blocked damage.
  * Config for customizing indicator fade time.

@@ -1,7 +1,7 @@
 package com.rosymaple.hitindication.event;
 
 import com.rosymaple.hitindication.HitIndication;
-import com.rosymaple.hitindication.capability.latesthits.ClientLatestHits;
+import com.rosymaple.hitindication.latesthits.ClientLatestHits;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;

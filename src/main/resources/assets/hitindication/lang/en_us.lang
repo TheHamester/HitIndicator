@@ -14,3 +14,5 @@ hitindication.gui.config.indicators.fade_rate=Indicator Fade Rate (Ticks)
 hitindication.gui.config.indicators.indicator_opacity=Indicator Opacity (0-100)
 
 hitindication.gui.config.indicators.display_blue_indicators=Show Block Indicator
+
+hitindication.gui.config.indicators.enable_hit_markers=Enable Crit/Kill Markers
