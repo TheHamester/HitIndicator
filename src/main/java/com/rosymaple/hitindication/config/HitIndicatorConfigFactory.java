@@ -38,7 +38,7 @@ public class HitIndicatorConfigFactory implements IModGuiFactory {
 
     public static class HitIndicatorConfigGui extends GuiConfig {
         public HitIndicatorConfigGui(GuiScreen parentScreen) {
-            super(parentScreen, getConfigElements(), HitIndication.MODID, false, false, I18n.format("gui.config.main_title"));
+            super(parentScreen, getConfigElements(), HitIndication.MODID, false, false, I18n.format("hitindication.gui.config.main_title"));
         }
 
         private static List<IConfigElement> getConfigElements() {

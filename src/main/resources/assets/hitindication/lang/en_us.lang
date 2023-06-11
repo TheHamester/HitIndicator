@@ -2,17 +2,25 @@
 hitindication.gui.config.main_title=Hit Indicators Config
 
 hitindication.gui.config.indicators.max_indicator_count=Max Indicator Count
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Determines maximum indicator count shown on screen (0 means unlimited). Upon exceeding the oldest indicator will be removed.
 
 hitindication.gui.config.indicators.display_hits_from_negative_potions=Display Hits From Non-Damaging Negative Potions
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Shows red indicator when an entity hits the player with a non-damaging negative potion.
 
 hitindication.gui.config.indicators.size_depends_on_damage=Heavy damage makes indicator larger
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Any instance of damage that deals 30 percent or more of max health will result in larger indicators.
 
 hitindication.gui.config.indicators.indicator_default_scale=Indicator Default Scale (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Determines scale of indicators.
 
 hitindication.gui.config.indicators.fade_rate=Indicator Fade Rate (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=Amount of ticks after which indicator disappears.
 
 hitindication.gui.config.indicators.indicator_opacity=Indicator Opacity (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Determines opacity of the indicators.
 
 hitindication.gui.config.indicators.display_blue_indicators=Show Block Indicator
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Shows blue indicator when the player blocks incoming damage with a shield.
 
 hitindication.gui.config.indicators.enable_hit_markers=Enable Crit/Kill Markers
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Enables hit markers on crit/kill.

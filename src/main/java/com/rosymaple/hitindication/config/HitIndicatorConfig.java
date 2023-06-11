@@ -49,42 +49,42 @@ public class HitIndicatorConfig {
 
         Property maxIndicatorCount = config.get(CATEGORY_NAME_INDICATOR, "max_indicator_count", 0);
         maxIndicatorCount.setLanguageKey("hitindication.gui.config.indicators.max_indicator_count");
-        maxIndicatorCount.setComment("Determines maximum indicator count shown on screen (0 = unlimited). Upon exceeding the oldest indicator will be removed.");
+        //maxIndicatorCount.setComment("Determines maximum indicator count shown on screen (0 = unlimited). Upon exceeding the oldest indicator will be removed.");
         maxIndicatorCount.setMinValue(0);
 
         Property displayHitsFromNegativePotions
                 = config.get(CATEGORY_NAME_INDICATOR, "display_hits_from_negative_potions", true);
         displayHitsFromNegativePotions.setLanguageKey("hitindication.gui.config.indicators.display_hits_from_negative_potions");
-        displayHitsFromNegativePotions.setComment("Shows red indicator when an entity hits the player with a non-damaging negative potion.");
+        //displayHitsFromNegativePotions.setComment("Shows red indicator when an entity hits the player with a non-damaging negative potion.");
 
         Property fadeRate = config.get(CATEGORY_NAME_INDICATOR, "fade_rate", 50);
         fadeRate.setLanguageKey("hitindication.gui.config.indicators.fade_rate");
-        fadeRate.setComment("Amount of ticks after which indicator disappears.");
+        //fadeRate.setComment("Amount of ticks after which indicator disappears.");
         fadeRate.setMinValue(0);
 
         Property indicatorOpacity = config.get(CATEGORY_NAME_INDICATOR, "indicator_opacity", 25);
         indicatorOpacity.setLanguageKey("hitindication.gui.config.indicators.indicator_opacity");
-        indicatorOpacity.setComment("Determines opacity of the indicators.");
+        //indicatorOpacity.setComment("Determines opacity of the indicators.");
         indicatorOpacity.setMinValue(0);
         indicatorOpacity.setMaxValue(100);
 
         Property indicatorDefaultScale = config.get(CATEGORY_NAME_INDICATOR, "indicator_default_scale", 25);
         indicatorDefaultScale.setLanguageKey("hitindication.gui.config.indicators.indicator_default_scale");
-        indicatorDefaultScale.setComment("Determines scale of indicators.");
+        //indicatorDefaultScale.setComment("Determines scale of indicators.");
         indicatorDefaultScale.setMinValue(0);
         indicatorDefaultScale.setMaxValue(100);
 
         Property displayBlueIndicators = config.get(CATEGORY_NAME_INDICATOR, "display_blue_indicators", true);
         displayBlueIndicators.setLanguageKey("hitindication.gui.config.indicators.display_blue_indicators");
-        displayBlueIndicators.setComment("Shows blue indicator when the player blocks incoming damage with a shield.");
+        //displayBlueIndicators.setComment("Shows blue indicator when the player blocks incoming damage with a shield.");
 
         Property sizeDependsOnDamage = config.get(CATEGORY_NAME_INDICATOR, "size_depends_on_damage", false);
         sizeDependsOnDamage.setLanguageKey("hitindication.gui.config.indicators.size_depends_on_damage");
-        sizeDependsOnDamage.setComment("Any instance of damage that deals 30 percent or more of max health will result in larger indicators.");
+        //sizeDependsOnDamage.setComment("Any instance of damage that deals 30 percent or more of max health will result in larger indicators.");
 
         Property enableHitMarkers = config.get(CATEGORY_NAME_INDICATOR, "enable_hit_markers", false);
         enableHitMarkers.setLanguageKey("hitindication.gui.config.indicators.enable_hit_markers");
-        enableHitMarkers.setComment("Enables hit markers on crit/kill.");
+        //enableHitMarkers.setComment("Enables hit markers on crit/kill.");
 
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(maxIndicatorCount.getName());
