@@ -27,6 +27,8 @@ public class HitIndicatorConfig {
     public static int IndicatorDefaultScale;
     public static boolean EnableHitMarkers;
 
+    public static boolean EnableHitIndication;
+
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
         config = new Configuration(configFile);
@@ -46,6 +48,9 @@ public class HitIndicatorConfig {
     private static void syncConfig(boolean loadFromConfigFile, boolean readFromConfigFile) {
         if(loadFromConfigFile)
             config.load();
+
+        Property enableHitIndication = config.get(CATEGORY_NAME_INDICATOR, "enable_hit_indication", true);
+        enableHitIndication.setLanguageKey("hitindication.gui.config.indicators.enable_hit_indication");
 
         Property maxIndicatorCount = config.get(CATEGORY_NAME_INDICATOR, "max_indicator_count", 0);
         maxIndicatorCount.setLanguageKey("hitindication.gui.config.indicators.max_indicator_count");
@@ -87,6 +92,7 @@ public class HitIndicatorConfig {
         //enableHitMarkers.setComment("Enables hit markers on crit/kill.");
 
         List<String> propertyOrderIndicators = new ArrayList<>();
+        propertyOrderIndicators.add(enableHitIndication.getName());
         propertyOrderIndicators.add(maxIndicatorCount.getName());
         propertyOrderIndicators.add(displayHitsFromNegativePotions.getName());
         propertyOrderIndicators.add(displayBlueIndicators.getName());
@@ -98,6 +104,7 @@ public class HitIndicatorConfig {
         config.setCategoryPropertyOrder(CATEGORY_NAME_INDICATOR, propertyOrderIndicators);
 
         if(readFromConfigFile) {
+            EnableHitIndication = enableHitIndication.getBoolean();
             MaxIndicatorCount = maxIndicatorCount.getInt();
             DisplayHitsFromNegativePotions = displayHitsFromNegativePotions.getBoolean();
             FadeRate = fadeRate.getInt();

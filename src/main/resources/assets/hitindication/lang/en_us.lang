@@ -1,6 +1,9 @@
 
 hitindication.gui.config.main_title=Hit Indicators Config
 
+hitindication.gui.config.indicators.enable_hit_indication=Enable Hit Indication
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Enables hit indication.
+
 hitindication.gui.config.indicators.max_indicator_count=Max Indicator Count
 hitindication.gui.config.indicators.max_indicator_count.tooltip=Determines maximum indicator count shown on screen (0 means unlimited). Upon exceeding the oldest indicator will be removed.
 

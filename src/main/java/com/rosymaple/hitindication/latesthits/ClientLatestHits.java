@@ -14,6 +14,9 @@ public class ClientLatestHits {
     public static void addHitIndicator(double x, double y, double z, int type, int damagePercent, boolean hasNegativeEffects) {
         HitIndicatorType hitIndicatorType = HitIndicatorType.fromInt(type);
 
+        if(!HitIndicatorConfig.EnableHitIndication)
+            return;
+
         if(hitIndicatorType == HitIndicatorType.BLUE && !HitIndicatorConfig.ShowBlueIndicators)
             return;
 
