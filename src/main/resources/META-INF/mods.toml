@@ -3,10 +3,10 @@ loaderVersion="[40,)"
 license="CC-BY-SA-4.0"
 [[mods]]
 modId="hitindication"
-version="1.2"
+version="1.2.1"
 displayName="Hit Indication"
 logoFile="Hit_Indication.png"
-credits=""
+credits="HaHaWTH for zh_cn localization"
 authors="Hamester and Axovoxel"
 description="Adds configurable hit indicators."
 [[dependencies.examplemod]]

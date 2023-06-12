@@ -20,39 +20,39 @@ public class HitIndicatorClientConfigs {
         BUILDER.push("Hit Indication Config");
 
         EnableHitIndication = BUILDER.comment("Enables hit indication.")
-                .translation("hitindication.gui.config.indicators.enable_hit_indication")
+                .translation("hitindication.configgui.enable_hit_indication")
                 .define("Enable Hit Indication", true);
 
         MaxIndicatorCount = BUILDER.comment("Determines maximum indicator count shown on screen (0 = unlimited).")
-                .translation("hitindication.gui.config.indicators.max_indicator_count")
+                .translation("hitindication.configgui.max_indicator_count")
                 .defineInRange("Max Indicator Count", 0, 0, Integer.MAX_VALUE);
 
         DisplayHitsFromNegativePotions = BUILDER.comment("Shows red indicator when an entity hits the player with a non-damaging negative potion.")
-                .translation("hitindication.gui.config.indicators.display_hits_from_negative_potions")
+                .translation("hitindication.configgui.display_hits_from_negative_potions")
                 .define("Display Hits From Non-Damaging Negative Potions", false);
 
         FadeRate = BUILDER.comment("Amount of ticks after which indicator disappears.")
-                .translation("hitindication.gui.config.indicators.fade_rate")
+                .translation("hitindication.configgui.fade_rate")
                 .defineInRange("Indicator Fade Rate (Ticks)", 50, 0, Integer.MAX_VALUE);
 
         IndicatorOpacity = BUILDER.comment("Determines opacity of the indicators.")
-                .translation("hitindication.gui.config.indicators.display_hits_from_negative_potions")
+                .translation("hitindication.configgui.indicator_opacity")
                 .defineInRange("Indicator Opacity (0-100)", 25, 0, 100);
 
         ShowBlueIndicators = BUILDER.comment("Shows blue indicator when the player blocks incoming damage with a shield.")
-                .translation("hitindication.gui.config.indicators.display_blue_indicators")
+                .translation("hitindication.configgui.display_blue_indicators")
                 .define("Show Block Indicator", true);
 
         SizeDependsOnDamage = BUILDER.comment("Any instance of damage that deals 30 percent or more of max health will result in larger indicators.")
-                .translation("hitindication.gui.config.indicators.size_depends_on_damage")
+                .translation("hitindication.configgui.size_depends_on_damage")
                 .define("Heavy damage makes indicator larger", false);
 
         IndicatorDefaultScale = BUILDER.comment("Determines scale of indicators.")
-                .translation("hitindication.gui.config.indicators.indicator_default_scale")
+                .translation("hitindication.configgui.indicator_default_scale")
                 .defineInRange("Indicator Default Scale (0-100)", 25, 0, 100);
 
         EnableHitMarkers = BUILDER.comment("Enables hit markers on crit/kill.")
-                .translation("hitindication.gui.config.indicators.display_hits_from_negative_potions")
+                .translation("hitindication.configgui.enable_hit_markers")
                 .define("Enable Crit/Kill Markers", false);
 
 
