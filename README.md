@@ -9,6 +9,10 @@
 
 # Changelog
 
+## Update 1.2.1
+* Added the config for disabling hit indication if nessecary
+* Added zh_cn localization (credits to HaHaWTH)
+
 ## Update 1.2
 * Added hit markers for crits/kills
 * If you do a crit, hit an entity with an arrow or disable a shield via axe it will quickly show a white X at the crosshair.
