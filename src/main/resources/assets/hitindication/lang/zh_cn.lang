@@ -7,16 +7,32 @@ hitindication.gui.config.indicators.enable_hit_indication.tooltip=是否启用�
 
 hitindication.gui.config.indicators.max_indicator_count=最大指示器数量
 
+hitindication.gui.config.indicators.max_indicator_count.tooltip=此项决定屏幕上最多同时出现的指示器数量 (0为无限制).之后出现的指示器会覆盖最先出现的指示器
+
 hitindication.gui.config.indicators.display_hits_from_negative_potions=显示负面非伤害药水效果的指示器
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=当玩家被施加负面非伤害类型的药水效果时显示受击指示器
 
 hitindication.gui.config.indicators.size_depends_on_damage=伤害越高，指示器越大
 
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=用更大的指示器来显示任何对玩家造成大于等于30%最大生命值的伤害
+
 hitindication.gui.config.indicators.indicator_default_scale=指示器默认大小 (0-100)
+
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=控制指示器的基础大小.
 
 hitindication.gui.config.indicators.fade_rate=指示器消失速度 (单位:游戏刻)
 
+hitindication.gui.config.indicators.fade_rate.tooltip=指示器存在时间(单位:游戏刻)
+
 hitindication.gui.config.indicators.indicator_opacity=指示器透明度 (0-100)
+
+hitindication.gui.config.indicators.indicator_opacity.tooltip=控制指示器的不透明度.
 
 hitindication.gui.config.indicators.display_blue_indicators=显示阻挡伤害的指示器
 
-hitindication.gui.config.indicators.enable_hit_markers=启用 暴击/击杀 指示器
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=当玩家使用盾牌阻挡伤害时,显示蓝色的指示器
+
+hitindication.gui.config.indicators.enable_hit_markers=启用暴击/击杀标记
+
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=在玩家暴击或击杀时显示暴击/击杀标记
