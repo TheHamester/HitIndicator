@@ -1,6 +1,10 @@
 
 hitindication.gui.config.main_title=命中指示器配置
 
+hitindication.gui.config.indicators.enable_hit_indication=启用命中指示器
+
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=是否启用命中指示器
+
 hitindication.gui.config.indicators.max_indicator_count=最大指示器数量
 
 hitindication.gui.config.indicators.display_hits_from_negative_potions=显示负面非伤害药水效果的指示器
