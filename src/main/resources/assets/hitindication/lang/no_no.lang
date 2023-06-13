@@ -1,0 +1,29 @@
+
+hitindication.gui.config.main_title=Konfigurering av Hit Indication
+
+hitindication.gui.config.indicators.enable_hit_indication=Skru på 'Hit Indication'
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Skrur på treffindikasjon.
+
+hitindication.gui.config.indicators.max_indicator_count=Maks indikatorer
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Bestemmer hvor mange indikatorer kan vises på skjermen (0 betyr ubegrenset). Ved overskridelse blir den eldste indikatoren fjernet.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Vis treff fra ikke-skadelig negativt brygg.
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Viser en rød indikator når en entitet treffer spilleren med et ikke-skadelig negativt brygg.
+
+hitindication.gui.config.indicators.size_depends_on_damage=Kraftig skade gjør indikatoren større
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Skade som gir 30 prosent eller mer av maksimumhelse vil resultere i større indikatorer.
+
+hitindication.gui.config.indicators.indicator_default_scale=Standardinstilling for indikatorstørrelse (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Bestemmer størrelsen for indikatorer.
+
+hitindication.gui.config.indicators.fade_rate=Forsvinningshastighet for indikatorer (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=Antall 'ticks' før indikatoren forsvinner.
+
+hitindication.gui.config.indicators.indicator_opacity=Indikatorens gjennomsiktighet (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Bestemmer gjennomsiktigheten av indikatorene.
+
+hitindication.gui.config.indicators.display_blue_indicators=Vis blokkindikatorer
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Viser en blå indikator når spilleren blokkerer inkommende skade med et skjold.
+
+hitindication.gui.config.indicators.enable_hit_markers=Skru på 'Crit/Kill' markører
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Skrur på treff-markører ved kritiske/drepende slag.
