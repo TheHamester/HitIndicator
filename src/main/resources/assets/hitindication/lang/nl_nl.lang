@@ -1,0 +1,28 @@
+hitindication.gui.config.main_title=Hit Indicators Instellingen
+
+hitindication.gui.config.indicators.enable_hit_indication=Schakel Hit Indication in
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Schakelt slag indicators in
+
+hitindication.gui.config.indicators.max_indicator_count=Maximaal aantal indicatoren
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Bepaalt het maximale aantal indicatoren zichtbaar op het scherm (0 betekent onbeperkt). Bij overschrijding wordt de oudste indicator verwijderd.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Laat zien wanneer onschadelijke negatieve drankflessen worden geraakt
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Laat een rode indicator zien wanneer een entiteit de speler raakt met een onschadelijke negatieve drank.
+
+hitindication.gui.config.indicators.size_depends_on_damage=Zware verwondingen maakt de indicator groter
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Elk geval van verwonding dat groter is dan 30 procent van het maximale gezondheid maakt de indicator groter.
+
+hitindication.gui.config.indicators.indicator_default_scale=Indicator standaard schaal (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Bepaalt hoe groot de indicatoren zijn.
+
+hitindication.gui.config.indicators.fade_rate=Indicator vervaging snelheid (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=Aantal ticks wanneer de indicator verdwijnt.
+
+hitindication.gui.config.indicators.indicator_opacity=Indicator ondoorzichtigheid (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Bepaalt hoe doorzichtig de indicatoren zijn.
+
+hitindication.gui.config.indicators.display_blue_indicators=Laat blokkade indicator zien
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Laat een blauwe indicator zien wanneer de speler schade vermijd met een schild.
+
+hitindication.gui.config.indicators.enable_hit_markers=Schakel kritische en sterf markeringen in
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Schakelt markeringen in voor kritische en dodelijke aanvallen.

@@ -1,0 +1,29 @@
+
+hitindication.gui.config.main_title=Trefferindikator-Einst.
+
+hitindication.gui.config.indicators.enable_hit_indication=Trefferindikation Aktivieren
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Aktiviert Trefferindikation.
+
+hitindication.gui.config.indicators.max_indicator_count=Max. Indikatoranzahl
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Bestimmt die maximale Indikatoranzahl, die angezeigt wird (0 heißt unbegrenzt). Bei Überschreitung wird der älteste Indikator entfernt.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Zeige Treffer Von Unschädlichen Negativen Tränken
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Zeigt roten Indikator wenn ein Objekt den Spieler mit einem unschädlichen negativen Trank trifft.
+
+hitindication.gui.config.indicators.size_depends_on_damage=Schwerer Schaden vergrößert Indikator
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Jeder Schaden, der mindestens 30 Prozent des vollen Lebens nimmt, zeigt größere Indikatoren.
+
+hitindication.gui.config.indicators.indicator_default_scale=Indikator-Standardgröße (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Bestimmt Größe der Indikatoren.
+
+hitindication.gui.config.indicators.fade_rate=Indikator-Verschwindrate (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=Anzahl der Ticks nachdem Indikator verschwindet.
+
+hitindication.gui.config.indicators.indicator_opacity=Indikator-Deckkraft (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Bestimmt Deckkraft der Indikatoren.
+
+hitindication.gui.config.indicators.display_blue_indicators=Zeige Blockierindikator
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Zeigt blauen Indikator wenn der Spieler eingehenden Schaden mit einem Schild blockiert.
+
+hitindication.gui.config.indicators.enable_hit_markers=Aktiviere Crit/Kill-Marker
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Aktiviert Hitmarker bei kritischem Treffer/Tötung.
