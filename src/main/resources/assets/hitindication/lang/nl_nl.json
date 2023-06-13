@@ -1,0 +1,18 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Schakel Hit Indication in",
+
+  "hitindication.configgui.max_indicator_count":"Maximaal aantal indicatoren",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Laat zien wanneer onschadelijke negatieve drankflessen worden geraakt",
+
+  "hitindication.configgui.size_depends_on_damage":"Zware verwondingen maakt de indicator groter",
+
+  "hitindication.configgui.indicator_default_scale":"Indicator standaard schaal (0-100)",
+  "hitindication.configgui.fade_rate":"Indicator vervaging snelheid (Ticks)",
+
+  "hitindication.configgui.indicator_opacity":"Indicator ondoorzichtigheid (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Laat blokkade indicator zien",
+
+  "hitindication.configgui.enable_hit_markers":"Schakel kritische en sterf markeringen in"
+}
