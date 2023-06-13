@@ -1,0 +1,29 @@
+
+hitindication.gui.config.main_title=ilo ante pi Hit Indicators
+
+hitindication.gui.config.indicators.enable_hit_indication=o open e Hit Indication
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=o open e sitelen tan utala.
+
+hitindication.gui.config.indicators.max_indicator_count=nanpa sitelen
+hitindication.gui.config.indicators.max_indicator_count.tooltip=nanpa sitelen (ala li ale). sitelen li mute la majuna li weka.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=o sitelen tan telo usawi ike pi pakala ala.
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=o sitelen e sitelen loje tan ni: ijo li pilin e jan kepeken telo usawi ike pi pakala ala.
+
+hitindication.gui.config.indicators.size_depends_on_damage=o pakala mute la ma sitelen li suli.
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=o pakala >30% lon ijo la sitelen li suli.
+
+hitindication.gui.config.indicators.indicator_default_scale=sitelen suli la nanpa (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=sitelen suli la nanpa.
+
+hitindication.gui.config.indicators.fade_rate=tenpo Ticks pi sitelen weka
+hitindication.gui.config.indicators.fade_rate.tooltip=tenpo kama Ticks la sitelen li weka.
+
+hitindication.gui.config.indicators.indicator_opacity=sitelen nanpa lukin (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=sitelen li nanpa lukin. ala li weka, ale li lon.
+
+hitindication.gui.config.indicators.display_blue_indicators=o sitelen e pake utala
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=o sitelen e sitelen laso tan jan li pake e utala kepeken sinpin sijelo.
+
+hitindication.gui.config.indicators.enable_hit_markers=o open e sitelen moli
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=o open e sitelen tan moli anu pakala mute.
