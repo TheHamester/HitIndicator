@@ -7,10 +7,10 @@ hitindication.gui.config.indicators.enable_hit_indication.tooltip=o open e sitel
 hitindication.gui.config.indicators.max_indicator_count=nanpa sitelen
 hitindication.gui.config.indicators.max_indicator_count.tooltip=nanpa sitelen (ala li ale). sitelen li mute la majuna li weka.
 
-hitindication.gui.config.indicators.display_hits_from_negative_potions=o sitelen tan telo usawi ike pi pakala ala.
+hitindication.gui.config.indicators.display_hits_from_negative_potions=o sitelen tan telo usawi ike pi pakala ala
 hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=o sitelen e sitelen loje tan ni: ijo li pilin e jan kepeken telo usawi ike pi pakala ala.
 
-hitindication.gui.config.indicators.size_depends_on_damage=o pakala mute la ma sitelen li suli.
+hitindication.gui.config.indicators.size_depends_on_damage=o pakala mute la ma sitelen li suli
 hitindication.gui.config.indicators.size_depends_on_damage.tooltip=o pakala >30% lon ijo la sitelen li suli.
 
 hitindication.gui.config.indicators.indicator_default_scale=sitelen suli la nanpa (0-100)

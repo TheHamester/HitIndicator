@@ -1,7 +1,7 @@
 
 hitindication.gui.config.main_title=Konfiguration av Hit Indicators
 
-hitindication.gui.config.indicators.enable_hit_indication=Använda Hit Indication.
+hitindication.gui.config.indicators.enable_hit_indication=Använda Hit Indication
 hitindication.gui.config.indicators.enable_hit_indication.tooltip=Använder träffindikationer.
 
 hitindication.gui.config.indicators.max_indicator_count=Max antal indikatorer
