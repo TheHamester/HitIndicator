@@ -1,0 +1,29 @@
+
+hitindication.gui.config.main_title=Nautical Radar Config
+
+hitindication.gui.config.indicators.enable_hit_indication=Seein' Red
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Shows where yee's boat been struck.
+
+hitindication.gui.config.indicators.max_indicator_count=All Hands On Deck
+hitindication.gui.config.indicators.max_indicator_count.tooltip=How much of your crew will help your girl stay afloat (0 is equal to a crew deeper than the Mariana Trench). If the deck becomes overcrowded, the eldest will be thrown overboard!
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Yee Has Scurvy
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=See if yee has caught the curse of Davy Jones.
+
+hitindication.gui.config.indicators.size_depends_on_damage=At The Plank's Edge
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=If yee ship be be sunk to the sleeping quarters, then the red will be lookin' larger than Moby Dick!
+
+hitindication.gui.config.indicators.indicator_default_scale=Set The Sails (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Which way the winds blowing?
+
+hitindication.gui.config.indicators.fade_rate=Drop The Anchor (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=How long until the anchor reaches the sea's floor.
+
+hitindication.gui.config.indicators.indicator_opacity=Clean The Telescope (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Land Ahoy!!
+
+hitindication.gui.config.indicators.display_blue_indicators=Evade Cannon Fire
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=These rookies think they can touch the Jolly Roger!
+
+hitindication.gui.config.indicators.enable_hit_markers=Aim For The Peg
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=See whether you hit the captain's quarters!

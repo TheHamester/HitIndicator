@@ -1,0 +1,28 @@
+hitindication.gui.config.main_title=Конфигурация индикаторов урона
+
+hitindication.gui.config.indicators.enable_hit_indication=Включить индикацию урона
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Включает индикацию урона.
+
+hitindication.gui.config.indicators.max_indicator_count=Максимальное кол-во индикаторов
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Максимальное количество индикаторов, которое может отображаться на экране. При достижении максимума новые самые старые индикаторы удаляются.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Инидкатор от отрицательных не наносящих урон зелий
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Показывает красный индикатор если существо попадает в игрока отрицательным не наносящим урон зельем.
+
+hitindication.gui.config.indicators.size_depends_on_damage=Размер индикатора от тяжести урона
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Любой урон игроку превышающий 30 процентов от его максимального здоровья увеличивает размер индикатора.
+
+hitindication.gui.config.indicators.indicator_default_scale=Размер индикатора по-умолчанию (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Определяет размер индикатора по-умолчанию.
+
+hitindication.gui.config.indicators.fade_rate=Время исчезания индикатора (в тиках)
+hitindication.gui.config.indicators.fade_rate.tooltip=Количество тиков после которого индикатор исчезает.
+
+hitindication.gui.config.indicators.indicator_opacity=Прозрачность индикатора (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Определяет прозрачность индикатора.
+
+hitindication.gui.config.indicators.display_blue_indicators=Показывать синие индикаторы
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Показывает синие индикаторы если игрок блокирует урон щитом.
+
+hitindication.gui.config.indicators.enable_hit_markers=Маркеры критичесокго/смертельного урона
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Включает маркеры критического/смертельного урона.
