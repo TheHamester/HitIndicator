@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"o open e Hit Indication",
+
+  "hitindication.configgui.max_indicator_count":"nanpa sitelen",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"o sitelen tan telo usawi ike pi pakala ala",
+
+  "hitindication.configgui.size_depends_on_damage":"o pakala mute la ma sitelen li suli",
+
+  "hitindication.configgui.indicator_default_scale":"sitelen suli la nanpa (0-100)",
+
+  "hitindication.configgui.fade_rate":"tenpo Ticks pi sitelen weka",
+
+  "hitindication.configgui.indicator_opacity":"sitelen nanpa lukin (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"o sitelen e pake utala",
+
+  "hitindication.configgui.enable_hit_markers":"o open e sitelen moli"
+}
