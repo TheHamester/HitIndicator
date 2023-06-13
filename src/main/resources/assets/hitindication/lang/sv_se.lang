@@ -1,0 +1,29 @@
+
+hitindication.gui.config.main_title=Konfiguration av Hit Indicators
+
+hitindication.gui.config.indicators.enable_hit_indication=Använda Hit Indication.
+hitindication.gui.config.indicators.enable_hit_indication.tooltip=Använder träffindikationer.
+
+hitindication.gui.config.indicators.max_indicator_count=Max antal indikatorer
+hitindication.gui.config.indicators.max_indicator_count.tooltip=Bestämmer hur många indikatorer kan visas på skärmen (0 betyder obegränsat). När den överskrids kommer den äldsta indikatorn att tas bort.
+
+hitindication.gui.config.indicators.display_hits_from_negative_potions=Visa träffar från icke-skadliga negativa brygd
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Visar en röd indikator när någon träffer spelaren med en icke-skadlig negativ brygd.
+
+hitindication.gui.config.indicators.size_depends_on_damage=Kraftliga skador gör indikatorn större
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Alla skador som ger 30 procent eller mer av maxhälsa kommer resultera i större indikatorer.
+
+hitindication.gui.config.indicators.indicator_default_scale=Indikatorskala (0-100)
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Bestämmer störrelsen av indikatorer.
+
+hitindication.gui.config.indicators.fade_rate=Indikatornförsvinnandehastighet (Ticks)
+hitindication.gui.config.indicators.fade_rate.tooltip=Antal 'ticks' innan indikator försvinner.
+
+hitindication.gui.config.indicators.indicator_opacity=Indikatoropacitet (0-100)
+hitindication.gui.config.indicators.indicator_opacity.tooltip=Bestämmer av opacitet inom indikatorna.
+
+hitindication.gui.config.indicators.display_blue_indicators=Visa blockindikatorer
+hitindication.gui.config.indicators.display_blue_indicators.tooltip=Visar blå indikatorer när spelaren blockerar inkommande skade med en sköld.
+
+hitindication.gui.config.indicators.enable_hit_markers=Använda Crit/Kill markörer
+hitindication.gui.config.indicators.enable_hit_markers.tooltip=Använder träffmarkörer inom kritisk/dödlig träff.
