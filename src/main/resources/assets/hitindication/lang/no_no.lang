@@ -8,10 +8,10 @@ hitindication.gui.config.indicators.max_indicator_count=Maks indikatorer
 hitindication.gui.config.indicators.max_indicator_count.tooltip=Bestemmer hvor mange indikatorer kan vises på skjermen (0 betyr ubegrenset). Ved overskridelse blir den eldste indikatoren fjernet.
 
 hitindication.gui.config.indicators.display_hits_from_negative_potions=Vis treff fra ikke-skadelig negativt brygg.
-hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Viser en rød indikator når en entitet treffer spilleren med en ikke-skadelig negativt brygg.
+hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=Viser en rød indikator når en entitet treffer spilleren med et ikke-skadelig negativt brygg.
 
 hitindication.gui.config.indicators.size_depends_on_damage=Kraftig skade gjør indikatoren større
-hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Skade som gir 30 prosent eller mer av maksimum helse will resultere i større indikatorer.
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=Skade som gir 30 prosent eller mer av maksimumhelse vil resultere i større indikatorer.
 
 hitindication.gui.config.indicators.indicator_default_scale=Standardinstilling for indikatorstørrelse (0-100)
 hitindication.gui.config.indicators.indicator_default_scale.tooltip=Bestemmer størrelsen for indikatorer.
