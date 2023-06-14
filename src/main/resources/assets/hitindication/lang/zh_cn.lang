@@ -25,7 +25,7 @@ hitindication.gui.config.indicators.fade_rate=指示器消失速度 (单位:游�
 
 hitindication.gui.config.indicators.fade_rate.tooltip=指示器存在时间(单位:游戏刻)
 
-hitindication.gui.config.indicators.indicator_opacity=指示器透明度 (0-100)
+hitindication.gui.config.indicators.indicator_opacity=指示器不透明度 (0-100)
 
 hitindication.gui.config.indicators.indicator_opacity.tooltip=控制指示器的不透明度.
 
