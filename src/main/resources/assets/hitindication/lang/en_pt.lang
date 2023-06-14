@@ -11,10 +11,10 @@ hitindication.gui.config.indicators.display_hits_from_negative_potions=Yee Has S
 hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=See if yee has caught the curse of Davy Jones.
 
 hitindication.gui.config.indicators.size_depends_on_damage=At The Plank's Edge
-hitindication.gui.config.indicators.size_depends_on_damage.tooltip=If yee ship be be sunk to the sleeping quarters, then the red will be lookin' larger than Moby Dick!
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=If yee ship be sunk to the sleeping quarters, then the red will be lookin' larger than Moby Dick!
 
 hitindication.gui.config.indicators.indicator_default_scale=Set The Sails (0-100)
-hitindication.gui.config.indicators.indicator_default_scale.tooltip=Which way the winds blowing?
+hitindication.gui.config.indicators.indicator_default_scale.tooltip=Which way do the winds be blowing?
 
 hitindication.gui.config.indicators.fade_rate=Drop The Anchor (Ticks)
 hitindication.gui.config.indicators.fade_rate.tooltip=How long until the anchor reaches the sea's floor.
