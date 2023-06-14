@@ -11,7 +11,7 @@
 
   "hitindication.configgui.fade_rate":"指示器消失速度 (单位:游戏刻)",
 
-  "hitindication.configgui.indicator_opacity":"指示器透明度 (0-100)",
+  "hitindication.configgui.indicator_opacity":"指示器不透明度 (0-100)",
 
   "hitindication.configgui.display_blue_indicators":"显示阻挡伤害的指示器",
 
