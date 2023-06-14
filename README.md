@@ -18,7 +18,7 @@
 * Added Russian localization
 
 ## Patch 1.2.1
-* Added the config for disabling hit indication if nessecary
+* Added the config for disabling hit indication if necessary
 * Added zh_cn localization (credits to HaHaWTH)
 
 ## Update 1.2
