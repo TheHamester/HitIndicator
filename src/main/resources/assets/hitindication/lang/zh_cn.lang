@@ -15,7 +15,7 @@ hitindication.gui.config.indicators.display_hits_from_negative_potions.tooltip=�
 
 hitindication.gui.config.indicators.size_depends_on_damage=伤害越高，指示器越大
 
-hitindication.gui.config.indicators.size_depends_on_damage.tooltip=用更大的指示器来显示任何对玩家造成大于等于30%最大生命值的伤害
+hitindication.gui.config.indicators.size_depends_on_damage.tooltip=用更大的指示器来显示任何对玩家造成≥30%最大生命值的伤害
 
 hitindication.gui.config.indicators.indicator_default_scale=指示器默认大小 (0-100)
 
