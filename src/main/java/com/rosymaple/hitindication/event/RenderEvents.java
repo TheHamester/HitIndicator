@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec2;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -93,6 +94,14 @@ public class RenderEvents {
             scaledTextureHeight = (int)Math.floor(scaledTextureHeight * scale);
         }
 
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+        float distanceScaling = 1.0f - (distanceFromPlayer <= 10f ? 0f : (distanceFromPlayer - 10.0f) / 10.0f);
+        if(distanceScaling > 1) distanceScaling = 1;
+        if(distanceScaling < 0) distanceScaling = 0;
+        scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
+        scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
+
+        RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         bindIndicatorTexture(hit.getType());
 
@@ -104,6 +113,8 @@ public class RenderEvents {
         Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - 30 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         stack.popPose();
+
+        RenderSystem.disableBlend();
     }
 
     private static void bindIndicatorTexture(HitIndicatorType type) {
@@ -143,5 +154,16 @@ public class RenderEvents {
     private static Vec2 getLookVec(LocalPlayer player) {
         Vec2 vec = new Vec2((float)(-Math.sin(-player.getYRot() * Math.PI / 180.0 - Math.PI)), (float)(-Math.cos(-player.getYRot() * Math.PI / 180.0 - Math.PI)));
         return vec;
+    }
+
+    private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
+        if(Minecraft.getInstance().player == null)
+            return 0;
+
+        Vec3 playerPos = Minecraft.getInstance().player.getPosition(0);
+        double d0 = damageLocation.x - playerPos.x;
+        double d1 = damageLocation.y - playerPos.y;
+        double d2 = damageLocation.z - playerPos.z;
+        return (float)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 }

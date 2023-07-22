@@ -9,6 +9,10 @@
 
 # Changelog
 
+## Patch 1.2.3
+* Added scaling dependent on distance from the damage source
+* Added traditional chinese localization (credits to HaHaWTH)
+
 ## Patch 1.2.2
 * Added Swedish and toki pona localization (credits to Emik)
 * Added Norwegean localization (credits to Enitoni)

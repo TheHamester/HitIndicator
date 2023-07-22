@@ -2,6 +2,7 @@ package com.rosymaple.hitindication.event;
 
 import com.rosymaple.hitindication.HitIndication;
 import com.rosymaple.hitindication.latesthits.ClientLatestHits;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
