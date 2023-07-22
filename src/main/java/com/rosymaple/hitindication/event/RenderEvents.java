@@ -1,6 +1,7 @@
 package com.rosymaple.hitindication.event;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.rosymaple.hitindication.HitIndication;
 import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 import com.rosymaple.hitindication.latesthits.*;
@@ -10,6 +11,7 @@ import net.minecraft.client.gui.AbstractGui;
 
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Vector2f;
 import net.minecraft.util.math.vector.Vector3d;
@@ -95,6 +97,13 @@ public class RenderEvents {
             scaledTextureHeight = (int)Math.floor(scaledTextureHeight* scale);
         }
 
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+        float distanceScaling = 1.0f - (distanceFromPlayer <= 10f ? 0f : (distanceFromPlayer - 10.0f) / 10.0f);
+        if(distanceScaling > 1) distanceScaling = 1;
+        if(distanceScaling < 0) distanceScaling = 0;
+        scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
+        scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
+
         bindIndicatorTexture(textureManager, hit.getType());
 
         GL11.glPushMatrix();
@@ -143,5 +152,16 @@ public class RenderEvents {
 
     private static Vector2f getLookVec(ClientPlayerEntity player) {
         return new Vector2f((float)(-Math.sin(-player.rotationYaw * Math.PI / 180.0 - Math.PI)), (float)(-Math.cos(-player.rotationYaw * Math.PI / 180.0 - Math.PI)));
+    }
+
+    private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
+        if(Minecraft.getInstance().player == null)
+            return 0;
+
+        ClientPlayerEntity player = Minecraft.getInstance().player;
+        double d0 = damageLocation.x - player.getPosX();
+        double d1 = damageLocation.y - player.getPosY();
+        double d2 = damageLocation.z - player.getPosZ();
+        return (float)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 }
