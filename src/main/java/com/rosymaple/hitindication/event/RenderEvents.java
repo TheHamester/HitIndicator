@@ -11,6 +11,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -96,6 +97,13 @@ public class RenderEvents {
             scaledTextureHeight = (int)Math.floor(scaledTextureHeight* scale);
         }
 
+        float distanceFromPlayer = calculateDistanceFromPlayer(hitIndicator.getLocation());
+        float distanceScaling = 1.0f - (distanceFromPlayer <= 10f ? 0f : (distanceFromPlayer - 10.0f) / 10.0f);
+        if(distanceScaling > 1) distanceScaling = 1;
+        if(distanceScaling < 0) distanceScaling = 0;
+        scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
+        scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
+
         bindIndicatorTexture(textureManager, hitIndicator.getType());
 
         GL11.glPushMatrix();
@@ -144,5 +152,16 @@ public class RenderEvents {
 
     private static Vector2d getLookVec(EntityPlayerSP player) {
         return new Vector2d(-Math.sin(-player.rotationYaw * Math.PI / 180.0 - Math.PI), -Math.cos(-player.rotationYaw * Math.PI / 180.0 - Math.PI));
+    }
+
+    private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
+        if(Minecraft.getMinecraft().player == null)
+            return 0;
+
+        Vec3d playerPos = Minecraft.getMinecraft().player.getPositionVector();
+        double d0 = damageLocation.x - playerPos.x;
+        double d1 = damageLocation.y - playerPos.y;
+        double d2 = damageLocation.z - playerPos.z;
+        return (float)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 }
