@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Включить индикацию урона",
+
+  "hitindication.configgui.max_indicator_count":"Максимальное кол-во индикаторов",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Инидкатор от отрицательных не наносящих урон зелий",
+
+  "hitindication.configgui.size_depends_on_damage":"Размер индикатора от тяжести урона",
+
+  "hitindication.configgui.indicator_default_scale":"Размер индикатора по-умолчанию (0-100)",
+
+  "hitindication.configgui.fade_rate":"Время исчезания индикатора (в тиках)",
+
+  "hitindication.configgui.indicator_opacity":"Прозрачность индикатора (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Показывать синие индикаторы",
+
+  "hitindication.configgui.enable_hit_markers":"Маркеры критичесокго/смертельного урона"
+}

@@ -1,0 +1,11 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+[[mods]]
+modId="${mod_id}"
+version="1.2.3"
+displayName="${mod_name}"
+logoFile="Hit_Indication.png"
+credits="Thank you HaHaWTH, Emik, Enitoni, Lily for localizations"
+authors="${mod_authors}"
+description='''${mod_description}'''
