@@ -3,7 +3,7 @@ loaderVersion="[40,)"
 license="CC-BY-SA-4.0"
 [[mods]]
 modId="hitindication"
-version="1.2.3"
+version="1.2.4"
 displayName="Hit Indication"
 logoFile="Hit_Indication.png"
 credits="Thank you HaHaWTH, Emik, Enitoni, Lily for localizations"
