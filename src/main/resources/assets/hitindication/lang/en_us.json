@@ -15,5 +15,9 @@
 
   "hitindication.configgui.display_blue_indicators":"Show Block Indicator",
 
-  "hitindication.configgui.enable_hit_markers":"Enable Crit/Kill Markers"
+  "hitindication.configgui.enable_hit_markers":"Enable Crit/Kill Markers",
+
+  "hitindication.configgui.enable_distance_scaling":"Enable Distance Scaling",
+
+  "hitindication.configgui.distance_scaling_cutoff":"Distance Scaling Cutoff"
 }
