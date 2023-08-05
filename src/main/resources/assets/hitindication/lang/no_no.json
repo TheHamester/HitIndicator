@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Skru på 'Hit Indication'",
+
+  "hitindication.configgui.max_indicator_count":"Maks indikatorer",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Vis treff fra ikke-skadelig negativt brygg.",
+
+  "hitindication.configgui.size_depends_on_damage":"Kraftig skade gjør indikatoren større",
+
+  "hitindication.configgui.indicator_default_scale":"Standardinstilling for indikatorstørrelse (0-100)",
+
+  "hitindication.configgui.fade_rate":"Forsvinningshastighet for indikatorer (Ticks)",
+
+  "hitindication.configgui.indicator_opacity":"Indikatorens gjennomsiktighet (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Vis blokkindikatorer",
+
+  "hitindication.configgui.enable_hit_markers":"Skru på 'Crit/Kill' markører"
+}
