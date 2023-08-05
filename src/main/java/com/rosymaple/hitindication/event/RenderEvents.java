@@ -96,12 +96,15 @@ public class RenderEvents {
             scaledTextureHeight = (int)Math.floor(scaledTextureHeight * scale);
         }
 
-        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
-        float distanceScaling = 1.0f - (distanceFromPlayer <= 10f ? 0f : (distanceFromPlayer - 10.0f) / 10.0f);
-        if(distanceScaling > 1) distanceScaling = 1;
-        if(distanceScaling < 0) distanceScaling = 0;
-        scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
-        scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
+        if(HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
+            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+            float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
+            float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
+            if (distanceScaling > 1) distanceScaling = 1;
+            if (distanceScaling < 0) distanceScaling = 0;
+            scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
+            scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+        }
 
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
