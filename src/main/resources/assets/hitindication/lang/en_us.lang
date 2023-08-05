@@ -27,3 +27,9 @@ hitindication.gui.config.indicators.display_blue_indicators.tooltip=Shows blue i
 
 hitindication.gui.config.indicators.enable_hit_markers=Enable Crit/Kill Markers
 hitindication.gui.config.indicators.enable_hit_markers.tooltip=Enables hit markers on crit/kill.
+
+hitindication.gui.config.indicators.enable_distance_scaling=Enable Distance Scaling
+hitindication.gui.config.indicators.enable_distance_scaling.tooltip=Scale of the indicator depends on the distance.
+
+hitindication.gui.config.indicators.distance_scaling_cutoff=Distance Scaling Cutoff
+hitindication.gui.config.indicators.distance_scaling_cutoff.tooltip=Distance from entity after which indicator starts to become gradually smaller.

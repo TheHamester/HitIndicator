@@ -9,6 +9,10 @@
 
 # Changelog
 
+## Patch 1.2.4
+* Added config option to enable distance scaling
+* Added config option for distance scaling cutoff
+
 ## Patch 1.2.3
 * Added scaling dependent on distance from the damage source
 * Added traditional chinese localization (credits to HaHaWTH)
