@@ -14,7 +14,7 @@ public class HitIndicator {
         this.damageSourceLocation = new Vector3d(x, y, z);
         this.hitIndicatorType = hitIndicatorType;
         this.damagePercent = damagePercent;
-        lifetime = HitIndicatorConfig.FadeRate;
+        lifetime = hitIndicatorType == HitIndicatorType.ND_RED ? 25 : HitIndicatorConfig.FadeRate;
     }
 
     public void tick() {

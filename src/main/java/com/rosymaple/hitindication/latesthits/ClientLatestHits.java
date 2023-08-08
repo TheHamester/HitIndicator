@@ -16,7 +16,8 @@ public class ClientLatestHits {
 
         if(!HitIndicatorConfig.EnableHitIndication)
             return;
-
+        if(hitIndicatorType == HitIndicatorType.ND_RED && !HitIndicatorConfig.EnableNonDirectionalDamage)
+            return;
         if(hitIndicatorType == HitIndicatorType.BLUE && !HitIndicatorConfig.ShowBlueIndicators)
             return;
 

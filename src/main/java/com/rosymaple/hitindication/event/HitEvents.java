@@ -38,11 +38,18 @@ public class HitEvents {
         if(event.getSource().getImmediateSource() instanceof EntityPotion)
             return;
 
-        if(!(event.getSource().getTrueSource() instanceof EntityLivingBase))
-            return;
+        if(!(event.getSource().getTrueSource() instanceof EntityLivingBase)
+                || event.getSource().getTrueSource().getUniqueID().equals(event.getEntity().getUniqueID())) {
 
-        if(event.getSource().getTrueSource().getUniqueID().equals(event.getEntityLiving().getUniqueID()))
+            if(!(event.getEntity() instanceof EntityPlayerMP))
+                return;
+
+            EntityPlayerMP player = (EntityPlayerMP)event.getEntityLiving();
+            int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
+
+            PacketsHelper.addHitIndicator(player, null, HitIndicatorType.ND_RED, damagePercent, false);
             return;
+        }
 
         if(event.getSource().getTrueSource() instanceof EntityPlayerMP) {
             if(event.getSource().getImmediateSource() instanceof EntityArrow)

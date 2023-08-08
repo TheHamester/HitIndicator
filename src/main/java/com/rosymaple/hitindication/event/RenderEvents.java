@@ -25,6 +25,7 @@ import javax.vecmath.Vector3d;
 public class RenderEvents {
     private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
     private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
+    private static final ResourceLocation ND_RED_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
     private static final ResourceLocation[] MARKER_CRIT = {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit1.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit2.png"),
@@ -38,7 +39,7 @@ public class RenderEvents {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill4.png")
     };
 
-
+    private static final int ndTextureSize = 66;
     private static final int indicatorWidth = 42;
     private static final int indicatorHeight = 13;
     private static final int markerWidth = 20;
@@ -89,22 +90,25 @@ public class RenderEvents {
         opacity /= 100.0f;
 
         float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
-        int scaledTextureWidth = (int)Math.floor(indicatorWidth * defaultScale);
-        int scaledTextureHeight = (int)Math.floor(indicatorHeight * defaultScale);
-        if(HitIndicatorConfig.SizeDependsOnDamage) {
-            float scale = MathHelper.clamp(hitIndicator.getDamagePercent() > 30 ? 1 + hitIndicator.getDamagePercent() / 125.0f : 1, 0, 3);
-            scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
-            scaledTextureHeight = (int)Math.floor(scaledTextureHeight* scale);
-        }
+        int scaledTextureWidth = hitIndicator.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(indicatorWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
+        int scaledTextureHeight = hitIndicator.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(indicatorHeight * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
 
-        if(HitIndicatorConfig.EnableDistanceScaling) {
-            float distanceFromPlayer = calculateDistanceFromPlayer(hitIndicator.getLocation());
-            float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
-            float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
-            if (distanceScaling > 1) distanceScaling = 1;
-            if (distanceScaling < 0) distanceScaling = 0;
-            scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
-            scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+        if(hitIndicator.getType() != HitIndicatorType.ND_RED) {
+            if (HitIndicatorConfig.SizeDependsOnDamage) {
+                float scale = MathHelper.clamp(hitIndicator.getDamagePercent() > 30 ? 1 + hitIndicator.getDamagePercent() / 125.0f : 1, 0, 3);
+                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
+                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
+            }
+
+            if (HitIndicatorConfig.EnableDistanceScaling) {
+                float distanceFromPlayer = calculateDistanceFromPlayer(hitIndicator.getLocation());
+                float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
+                float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
+                if (distanceScaling > 1) distanceScaling = 1;
+                if (distanceScaling < 0) distanceScaling = 0;
+                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
+                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+            }
         }
 
         bindIndicatorTexture(textureManager, hitIndicator.getType());
@@ -112,9 +116,10 @@ public class RenderEvents {
         GL11.glPushMatrix();
         GL11.glColor4f(1, 1, 1, opacity);
         GL11.glTranslatef(screenMiddleX, screenMiddleY, 0);
-        GL11.glRotatef((float)angleBetween, 0, 0, 1);
+        if(hitIndicator.getType() != HitIndicatorType.ND_RED)
+            GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
-        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - 30 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hitIndicator.getType() == HitIndicatorType.ND_RED ? 0 : 30), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
@@ -122,6 +127,7 @@ public class RenderEvents {
     private static void bindIndicatorTexture(TextureManager textureManager, HitIndicatorType type) {
         switch(type) {
             case BLUE: textureManager.bindTexture(INDICATOR_BLUE);  break;
+            case ND_RED: textureManager.bindTexture(ND_RED_INDICATOR);  break;
             default: textureManager.bindTexture(INDICATOR_RED);  break;
         }
     }

@@ -9,6 +9,9 @@
 
 # Changelog
 
+## Update 1.3
+* Added config option to enable special circular indicator when hit direction can't be determined
+
 ## Patch 1.2.4
 * Added config option to enable distance scaling
 * Added config option for distance scaling cutoff

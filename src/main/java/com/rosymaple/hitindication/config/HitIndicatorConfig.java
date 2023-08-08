@@ -30,6 +30,7 @@ public class HitIndicatorConfig {
     public static boolean EnableHitIndication;
     public static boolean EnableDistanceScaling;
     public static int DistanceScalingCutoff;
+    public static boolean EnableNonDirectionalDamage;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -92,6 +93,9 @@ public class HitIndicatorConfig {
         Property enableHitMarkers = config.get(CATEGORY_NAME_INDICATOR, "enable_hit_markers", false);
         enableHitMarkers.setLanguageKey("hitindication.gui.config.indicators.enable_hit_markers");
 
+        Property enableNonDirectionalDamage = config.get(CATEGORY_NAME_INDICATOR, "enable_non_directional_damage", false);
+        enableNonDirectionalDamage.setLanguageKey("hitindication.gui.config.indicators.enable_non_directional_damage");
+
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(enableHitIndication.getName());
         propertyOrderIndicators.add(maxIndicatorCount.getName());
@@ -101,6 +105,7 @@ public class HitIndicatorConfig {
         propertyOrderIndicators.add(indicatorOpacity.getName());
         propertyOrderIndicators.add(indicatorDefaultScale.getName());
         propertyOrderIndicators.add(sizeDependsOnDamage.getName());
+        propertyOrderIndicators.add(enableNonDirectionalDamage.getName());
         propertyOrderIndicators.add(enableDistanceScaling.getName());
         propertyOrderIndicators.add(distanceScalingCutoff.getName());
         propertyOrderIndicators.add(enableHitMarkers.getName());
@@ -118,6 +123,7 @@ public class HitIndicatorConfig {
             EnableDistanceScaling = enableDistanceScaling.getBoolean();
             DistanceScalingCutoff = distanceScalingCutoff.getInt();
             EnableHitMarkers = enableHitMarkers.getBoolean();
+            EnableNonDirectionalDamage = enableNonDirectionalDamage.getBoolean();
         }
 
         if(config.hasChanged())

@@ -33,3 +33,6 @@ hitindication.gui.config.indicators.enable_distance_scaling.tooltip=Scale of the
 
 hitindication.gui.config.indicators.distance_scaling_cutoff=Distance Scaling Cutoff
 hitindication.gui.config.indicators.distance_scaling_cutoff.tooltip=Distance from entity after which indicator starts to become gradually smaller.
+
+hitindication.gui.config.indicators.enable_non_directional_damage=Enable Non-Directional Damage Indicator
+hitindication.gui.config.indicators.enable_non_directional_damage.tooltip=Shows a special indicator when hit direction can't be determined.
