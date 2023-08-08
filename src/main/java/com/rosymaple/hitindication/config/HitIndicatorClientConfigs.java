@@ -17,6 +17,7 @@ public class HitIndicatorClientConfigs {
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableHitIndication;
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableDistanceScaling;
     public static final ForgeConfigSpec.ConfigValue<Integer> DistanceScalingCutoff;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> EnableNonDirectionalDamage;
 
     static {
         BUILDER.push("Hit Indication Config");
@@ -57,9 +58,14 @@ public class HitIndicatorClientConfigs {
                 .translation("hitindication.configgui.enable_hit_markers")
                 .define("Enable Crit/Kill Markers", false);
 
+        EnableNonDirectionalDamage = BUILDER.comment("Shows a special indicator when hit direction can't be determined")
+                .translation("hitindication.configgui.enable_non_directional_damage")
+                .define("Enable Non Directional Damage", false);
+
         EnableDistanceScaling = BUILDER.comment("Scale of the indicator depends on the distance")
                 .translation("hitindication.configgui.enable_distance_scaling")
                 .define("Enable Distance Scaling", true);
+
 
         DistanceScalingCutoff = BUILDER.comment("Distance from entity after which indicator starts to become gradually smaller.")
                 .translation("hitindication.configgui.distance_scaling_cutoff")

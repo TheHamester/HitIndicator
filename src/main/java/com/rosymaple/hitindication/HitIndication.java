@@ -17,7 +17,6 @@ public class HitIndication {
     public static final String MODID = "hitindication";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-
     public HitIndication() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
