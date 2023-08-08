@@ -9,6 +9,9 @@
 
 # Changelog
 
+## Update 1.3
+* Added config option to enable special circular indicator when hit direction can't be determined
+
 ## Patch 1.2.4
 * Added config option to enable distance scaling
 * Added config option for distance scaling cutoff
@@ -53,7 +56,7 @@
 * Added an optional config which makes indicators for heavy hits larger.
 
 ## Release 1.0
- * Red Indicators on damage, pointing to intial location of damage source.
+ * Red Indicators on damage, pointing to initial location of damage source.
  * Optional config which displays indicators for non-damaging negative potions.
  * Optional config which displays blue indicator for blocked damage.
  * Config for customizing indicator fade time.
