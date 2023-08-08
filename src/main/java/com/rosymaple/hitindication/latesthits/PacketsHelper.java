@@ -1,5 +1,6 @@
 package com.rosymaple.hitindication.latesthits;
 
+import com.mojang.math.Vector3d;
 import com.rosymaple.hitindication.networking.AddHitIndicatorS2CPacket;
 import com.rosymaple.hitindication.networking.ModPackets;
 import com.rosymaple.hitindication.networking.SetHitMarkerS2CPacket;
@@ -8,9 +9,12 @@ import net.minecraft.world.entity.LivingEntity;
 
 public class PacketsHelper {
     public static void addHitIndicator(ServerPlayer player, LivingEntity damageSource, HitIndicatorType hitIndicatorType, int damagePercent, boolean hasNegativeEffects) {
-        ModPackets.sendToPlayer(new AddHitIndicatorS2CPacket(damageSource.getX(),
-                        damageSource.getY(),
-                        damageSource.getZ(),
+        Vector3d pos = damageSource != null
+                ? new Vector3d(damageSource.getX(), damageSource.getY(), damageSource.getZ())
+                : new Vector3d(0,0,0);
+        ModPackets.sendToPlayer(new AddHitIndicatorS2CPacket(pos.x,
+                        pos.y,
+                        pos.z,
                         hitIndicatorType.type,
                         damagePercent,
                         hasNegativeEffects),
