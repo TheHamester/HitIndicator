@@ -26,6 +26,7 @@ import org.joml.Vector3d;
 public class RenderEvents {
     private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
     private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
+    private static final ResourceLocation ND_RED_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
     private static final ResourceLocation[] MARKER_CRIT = {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit1.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit2.png"),
@@ -38,6 +39,7 @@ public class RenderEvents {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill3.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill4.png")
     };
+    private static final int ndTextureSize = 66;
     private static final int textureWidth = 42;
     private static final int textureHeight = 13;
     private static final int markerWidth = 20;
@@ -88,22 +90,25 @@ public class RenderEvents {
         opacity /= 100.0f;
 
         float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
-        int scaledTextureWidth = (int)Math.floor(textureWidth * defaultScale);
-        int scaledTextureHeight = (int)Math.floor(textureHeight * defaultScale);
-        if(HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
-            float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
-            scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
-            scaledTextureHeight = (int)Math.floor(scaledTextureHeight * scale);
-        }
+        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(textureWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
+        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(textureHeight * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
 
-        if(HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
-            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
-            float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
-            float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
-            if (distanceScaling > 1) distanceScaling = 1;
-            if (distanceScaling < 0) distanceScaling = 0;
-            scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
-            scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+        if(hit.getType() != HitIndicatorType.ND_RED) {
+            if (HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
+                float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
+                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
+                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
+            }
+
+            if (HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
+                float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+                float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
+                float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
+                if (distanceScaling > 1) distanceScaling = 1;
+                if (distanceScaling < 0) distanceScaling = 0;
+                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
+                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+            }
         }
 
         RenderSystem.enableBlend();
@@ -113,9 +118,10 @@ public class RenderEvents {
         gui.pose().pushPose();
         RenderSystem.setShaderColor(1, 1, 1, opacity);
         gui.pose().translate(screenMiddleX, screenMiddleY, 0);
-        gui.pose().mulPose(Axis.ZP.rotationDegrees((float)angleBetween));
+        if(hit.getType() != HitIndicatorType.ND_RED)
+            gui.pose().mulPose(Axis.ZP.rotationDegrees((float)angleBetween));
         gui.pose().translate(-screenMiddleX, -screenMiddleY, 0);
-        gui.blit(atlasLocation, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - 30 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+        gui.blit(atlasLocation, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_RED ? 0 : 30), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.pose().popPose();
 
@@ -125,6 +131,7 @@ public class RenderEvents {
     private static ResourceLocation getIndicatorTexture(HitIndicatorType type) {
         switch(type) {
             case BLUE: return INDICATOR_BLUE;
+            case ND_RED: return ND_RED_INDICATOR;
             default: return INDICATOR_RED;
         }
     }
