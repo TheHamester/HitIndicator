@@ -36,11 +36,18 @@ public class HitEvents {
         if(event.getSource().getImmediateSource() instanceof PotionEntity)
             return;
 
-        if(!(event.getSource().getTrueSource() instanceof LivingEntity))
-            return;
+        if(!(event.getSource().getTrueSource() instanceof LivingEntity)
+                || event.getSource().getTrueSource().getUniqueID().equals(event.getEntity().getUniqueID())) {
 
-        if(event.getSource().getTrueSource().getUniqueID().equals(event.getEntityLiving().getUniqueID()))
+            if(!(event.getEntity() instanceof ServerPlayerEntity))
+                return;
+
+            ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
+            int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
+
+            PacketsHelper.addHitIndicator(player, null, HitIndicatorType.ND_RED, damagePercent, false);
             return;
+        }
 
         if(event.getSource().getTrueSource() instanceof ServerPlayerEntity) {
             if(event.getSource().getImmediateSource() instanceof ArrowEntity)

@@ -19,5 +19,7 @@
 
   "hitindication.configgui.enable_distance_scaling":"Enable Distance Scaling",
 
-  "hitindication.configgui.distance_scaling_cutoff":"Distance Scaling Cutoff"
+  "hitindication.configgui.distance_scaling_cutoff":"Distance Scaling Cutoff",
+
+  "hitindication.configgui.enable_non_directional_damage":"Enable Non-Directional Damage Indicator"
 }
