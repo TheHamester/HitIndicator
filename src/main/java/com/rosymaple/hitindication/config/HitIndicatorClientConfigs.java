@@ -18,6 +18,8 @@ public class HitIndicatorClientConfigs {
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableDistanceScaling;
     public static final ForgeConfigSpec.ConfigValue<Integer> DistanceScalingCutoff;
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableNonDirectionalDamage;
+    public static final ForgeConfigSpec.ConfigValue<Integer> DistanceFromCrosshair;
+
 
     static {
         BUILDER.push("Hit Indication Config");
@@ -53,6 +55,10 @@ public class HitIndicatorClientConfigs {
         IndicatorDefaultScale = BUILDER.comment("Determines scale of indicators.")
                 .translation("hitindication.configgui.indicator_default_scale")
                 .defineInRange("Indicator Default Scale (0-100)", 25, 0, 100);
+
+        DistanceFromCrosshair = BUILDER.comment("Determines distance of an indicator from crosshair.")
+                .translation("hitindication.configgui.distance_from_crosshair")
+                .defineInRange("Distance From Crosshair", 30, 30, Integer.MAX_VALUE);
 
         EnableHitMarkers = BUILDER.comment("Enables hit markers on crit/kill.")
                 .translation("hitindication.configgui.enable_hit_markers")

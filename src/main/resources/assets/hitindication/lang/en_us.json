@@ -21,5 +21,7 @@
 
   "hitindication.configgui.distance_scaling_cutoff":"Distance Scaling Cutoff",
 
-  "hitindication.configgui.enable_non_directional_damage":"Enable Non-Directional Damage Indicator"
+  "hitindication.configgui.enable_non_directional_damage":"Enable Non-Directional Damage Indicator",
+
+  "hitindication.configgui.distance_from_crosshair":"Distance From Crosshair"
 }
