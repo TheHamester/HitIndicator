@@ -36,3 +36,6 @@ hitindication.gui.config.indicators.distance_scaling_cutoff.tooltip=Distance fro
 
 hitindication.gui.config.indicators.enable_non_directional_damage=Enable Non-Directional Damage Indicator
 hitindication.gui.config.indicators.enable_non_directional_damage.tooltip=Shows a special indicator when hit direction can't be determined.
+
+hitindication.gui.config.indicators.distance_from_crosshair=Distance From Crosshair
+hitindication.gui.config.indicators.distance_from_crosshair.tooltip=Determines distance of an indicator from crosshair.

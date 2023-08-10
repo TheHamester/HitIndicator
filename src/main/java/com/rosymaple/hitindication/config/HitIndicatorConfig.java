@@ -31,6 +31,7 @@ public class HitIndicatorConfig {
     public static boolean EnableDistanceScaling;
     public static int DistanceScalingCutoff;
     public static boolean EnableNonDirectionalDamage;
+    public static int DistanceFromCrosshair;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -90,6 +91,10 @@ public class HitIndicatorConfig {
         distanceScalingCutoff.setLanguageKey("hitindication.gui.config.indicators.distance_scaling_cutoff");
         distanceScalingCutoff.setMinValue(0);
 
+        Property distanceFromCrosshair = config.get(CATEGORY_NAME_INDICATOR, "distance_from_crosshair", 30);
+        distanceFromCrosshair.setLanguageKey("hitindication.gui.config.indicators.distance_from_crosshair");
+        distanceFromCrosshair.setMinValue(30);
+
         Property enableHitMarkers = config.get(CATEGORY_NAME_INDICATOR, "enable_hit_markers", false);
         enableHitMarkers.setLanguageKey("hitindication.gui.config.indicators.enable_hit_markers");
 
@@ -105,6 +110,7 @@ public class HitIndicatorConfig {
         propertyOrderIndicators.add(indicatorOpacity.getName());
         propertyOrderIndicators.add(indicatorDefaultScale.getName());
         propertyOrderIndicators.add(sizeDependsOnDamage.getName());
+        propertyOrderIndicators.add(distanceFromCrosshair.getName());
         propertyOrderIndicators.add(enableNonDirectionalDamage.getName());
         propertyOrderIndicators.add(enableDistanceScaling.getName());
         propertyOrderIndicators.add(distanceScalingCutoff.getName());
@@ -124,6 +130,7 @@ public class HitIndicatorConfig {
             DistanceScalingCutoff = distanceScalingCutoff.getInt();
             EnableHitMarkers = enableHitMarkers.getBoolean();
             EnableNonDirectionalDamage = enableNonDirectionalDamage.getBoolean();
+            DistanceFromCrosshair = distanceFromCrosshair.getInt();
         }
 
         if(config.hasChanged())

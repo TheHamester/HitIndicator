@@ -88,6 +88,7 @@ public class RenderEvents {
                 ? HitIndicatorConfig.IndicatorOpacity
                 : HitIndicatorConfig.IndicatorOpacity * hitIndicator.getLifeTime() / 25.0f;
         opacity /= 100.0f;
+        int distanceFromCrosshair = HitIndicatorConfig.DistanceFromCrosshair;
 
         float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
         int scaledTextureWidth = hitIndicator.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(indicatorWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
@@ -119,7 +120,7 @@ public class RenderEvents {
         if(hitIndicator.getType() != HitIndicatorType.ND_RED)
             GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
-        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hitIndicator.getType() == HitIndicatorType.ND_RED ? 0 : 30), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hitIndicator.getType() == HitIndicatorType.ND_RED ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
