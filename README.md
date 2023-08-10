@@ -9,6 +9,9 @@
 
 # Changelog
 
+## Patch 1.3.1
+* Added config option to change distance of the indicators from crosshair
+
 ## Update 1.3
 * Added config option to enable special circular indicator when hit direction can't be determined
 
