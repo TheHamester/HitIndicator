@@ -85,6 +85,7 @@ public class RenderEvents {
                 ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                 : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
         opacity /= 100.0f;
+        int distanceFromCrosshair = HitIndicatorClientConfigs.DistanceFromCrosshair.get();
 
         float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
         int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(textureWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
@@ -118,7 +119,7 @@ public class RenderEvents {
         if(hit.getType() != HitIndicatorType.ND_RED)
             stack.mulPose(Vector3f.ZP.rotationDegrees((float)angleBetween));
         stack.translate(-screenMiddleX, -screenMiddleY, 0);
-        Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_RED ? 0 : 30), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+        Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_RED ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         RenderSystem.setShaderColor(1, 1, 1, 1);
         stack.popPose();
 
