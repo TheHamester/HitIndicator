@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Seein' Red",
+
+  "hitindication.configgui.max_indicator_count":"All Hands On Deck",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Yee Has Scurvy",
+
+  "hitindication.configgui.size_depends_on_damage":"At The Plank's Edge",
+
+  "hitindication.configgui.indicator_default_scale":"Set The Sails (0-100)",
+
+  "hitindication.configgui.fade_rate":"Drop The Anchor (Ticks)",
+
+  "hitindication.configgui.indicator_opacity":"Clean The Telescope (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Evade Cannon Fire",
+
+  "hitindication.configgui.enable_hit_markers":"Aim For The Peg"
+}
