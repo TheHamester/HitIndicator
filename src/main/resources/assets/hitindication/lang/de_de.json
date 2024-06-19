@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Trefferindikation Aktivieren",
+
+  "hitindication.configgui.max_indicator_count":"Max. Indikatoranzahl",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Zeige Treffer Von Unschädlichen Negativen Tränken",
+
+  "hitindication.configgui.size_depends_on_damage":"Schwerer Schaden vergrößert Indikator",
+
+  "hitindication.configgui.indicator_default_scale":"Indikator-Standardgröße (0-100)",
+
+  "hitindication.configgui.fade_rate":"Indikator-Verschwindrate (Ticks)",
+
+  "hitindication.configgui.indicator_opacity":"Indikator-Deckkraft (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Zeige Blockierindikator",
+
+  "hitindication.configgui.enable_hit_markers":"Aktiviere Crit/Kill-Marker"
+}

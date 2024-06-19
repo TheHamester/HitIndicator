@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "com.rosymaple.hitindication.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "IMixinGui",
+    "MixinGui"
+  ],
+  "server": [
+
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "hitindication.mixin.refmap.json"
+}

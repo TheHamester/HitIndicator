@@ -1,0 +1,19 @@
+{
+  "hitindication.configgui.enable_hit_indication":"Använda Hit Indication",
+
+  "hitindication.configgui.max_indicator_count":"Max antal indikatorer",
+
+  "hitindication.configgui.display_hits_from_negative_potions":"Visa träffar från icke-skadliga negativa brygd",
+
+  "hitindication.configgui.size_depends_on_damage":"Kraftliga skador gör indikatorn större",
+
+  "hitindication.configgui.indicator_default_scale":"Indikatorskala (0-100)",
+
+  "hitindication.configgui.fade_rate":"Indikatornförsvinnandehastighet (Ticks)",
+
+  "hitindication.configgui.indicator_opacity":"Indikatoropacitet (0-100)",
+
+  "hitindication.configgui.display_blue_indicators":"Visa blockindikatorer",
+
+  "hitindication.configgui.enable_hit_markers":"Använda Crit/Kill markörer"
+}
