@@ -1,32 +1,43 @@
 # Hit Indication
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This mod adds indicators to show where you got damaged from, much like in games such as Call of Duty, and Halo. The config options allow you to change stuff such as the opacity of the indicators, their fade out rate, and even whether a blue block indicator should appear if you block an attack with a shield.
+This mod adds indicators to show where you got damaged from, much like in games such as Call of Duty, and Halo. The config options allow you to change stuff such as the opacity of the indicators, their fade out rate, and even whether a blue block indicator should appear if you block an attack with a shield.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This can be used in any modpack without asking for premission as long as you give substantial credit, aka, a little more credit just having the mod in the Relations tab.
+This can be used in any modpack without asking for premission as long as you give substantial credit, a.k.a., a little more credit just having the mod in the Relations tab.
 
-[Curse Forge](https://www.curseforge.com/minecraft/mc-mods/hit-indication)\
-[Modrinth](https://modrinth.com/mod/hit-indication)  
-  
-If you're experiencing problems with this mod, when using Mohist Server, it is a known issue on the Mohist side https://github.com/MohistMC/Mohist/issues/2674  
-Also thank you everyone for 3 million downloads!!  
+* [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/hit-indication)
+* [Modrinth](https://modrinth.com/mod/hit-indication)  
 
-# Changelog
+## FAQ
+* Q. How do I configure the mod?  
+	A. You can configure mod by either modifying the config file located in ./config/hitindication-client.toml or using any external mod that generates config menus from config file, for example [Configured](https://legacy.curseforge.com/minecraft/mc-mods/configured).
+* Q. Will there be Fabric version?  
+	A. There's no Fabric or any other modding framework version planned at this moment
+* Q. Hit Indication does not work on server, what do I do?  
+	A. If you're using version 1.16.5 on a Mohist server, this is a known issue on the Mohist side: https://github.com/MohistMC/Mohist/issues/2674
 
-## Patch 1.3.1
+
+## Changelog
+
+### Update 1.4
+* Added config options for setting a color of the hit and block indicators
+* Added config options to toggle scren edge mode, which will render the indicators on the edge of the screen instead of close to crosshair
+* Now any damaging projectile display a hit marker, not just arrows
+
+### Patch 1.3.1
 * Added config option to change distance of the indicators from crosshair
 
-## Update 1.3
+### Update 1.3
 * Added config option to enable special circular indicator when hit direction can't be determined
 
-## Patch 1.2.4
+### Patch 1.2.4
 * Added config option to enable distance scaling
 * Added config option for distance scaling cutoff
 
-## Patch 1.2.3
+### Patch 1.2.3
 * Added scaling dependent on distance from the damage source
 * Added traditional chinese localization (credits to HaHaWTH)
 
-## Patch 1.2.2
+### Patch 1.2.2
 * Added Swedish and toki pona localization (credits to Emik)
 * Added Norwegean localization (credits to Enitoni)
 * Added German localization (credits to Lily)
@@ -34,34 +45,33 @@ Also thank you everyone for 3 million downloads!!
 * Added Dutch localization
 * Added Russian localization
 
-## Patch 1.2.1
+### Patch 1.2.1
 * Added the config for disabling hit indication if necessary
 * Added zh_cn localization (credits to HaHaWTH)
 
-## Update 1.2
+### Update 1.2
 * Added hit markers for crits/kills
 * If you do a crit, hit an entity with an arrow or disable a shield via axe it will quickly show a white X at the crosshair.
 * If you kill an entity it will quickly show a red X at the crosshair.
 * Self thrown negative potions no longer shows an indicator.
 
-## Patch 1.1.3
+### Patch 1.1.3
 * Hits from potions now display an indicator
 * Arrows now show an indicator in 1.18.2
 
-## Patch 1.1.2
+### Patch 1.1.2
 * Multiplayer support
 * Potions currently not working for some reason, will be fixed next patch
 
-## Patch 1.1.1
-
+### Patch 1.1.1
 * Fixed bug where attacks that would temporarily disable shield, such as with a Vindicator's attack, wouldn't show a block indicator.
 * If you have the Heavy damage makes indicator larger config on, attacks that disable shield will cause the block indicator to be double the normal size.
 
-## Update 1.1
+### Update 1.1
 * Added scale customization in configs.
 * Added an optional config which makes indicators for heavy hits larger.
 
-## Release 1.0
+### Release 1.0
  * Red Indicators on damage, pointing to initial location of damage source.
  * Optional config which displays indicators for non-damaging negative potions.
  * Optional config which displays blue indicator for blocked damage.
