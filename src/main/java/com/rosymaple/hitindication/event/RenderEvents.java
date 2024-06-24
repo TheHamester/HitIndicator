@@ -10,7 +10,6 @@ import com.rosymaple.hitindication.latesthits.*;
 import net.minecraft.client.Minecraft;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -20,13 +19,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import org.lwjgl.opengl.GL11;
 
 @Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Dist.CLIENT)
 public class RenderEvents {
-    private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
-    private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
-    private static final ResourceLocation ND_RED_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
+    private static final ResourceLocation INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator.png");
+    private static final ResourceLocation EDGE_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/edge_indicator.png");
+    private static final ResourceLocation INDICATOR_BLOCK = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_block.png");
+    private static final ResourceLocation ND_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
     private static final ResourceLocation[] MARKER_CRIT = {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit1.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit2.png"),
@@ -39,64 +38,106 @@ public class RenderEvents {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill3.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill4.png")
     };
-    private static final int ndTextureSize = 66;
-    private static final int textureWidth = 42;
-    private static final int textureHeight = 13;
-    private static final int markerWidth = 20;
-    private static final int markerHeight = 20;
+    private static final int ND_INDICATOR_WIDTH = 66;
+    private static final int INDICATOR_WIDTH = 42;
+    private static final int INDICATOR_HEIGHT = 13;
+    private static final int MARKER_WIDTH = 20;
+    private static final int MARKER_HEIGHT = 20;
+    private static final int EDGE_INDICATOR_WIDTH = 16;
+    private static final int EDGE_INDICATOR_HEIGHT = 16;
+
+    private static String lastHitColorString = "FF0000";
+    private static String lastBlockColorString = "0000FF";
+    private static float hitColorR = 1.0F, hitColorG = 0.0F, hitColorB = 0.0F;
+    private static float blockColorR = 0.0F, blockColorG = 0.0F, blockColorB = 1.0F;
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
-        if(event.getType() != RenderGameOverlayEvent.ElementType.ALL)
+        if (event.getType() != RenderGameOverlayEvent.ElementType.ALL)
             return;
 
         Minecraft mc = Minecraft.getInstance();
+        if(mc.player == null)
+            return;
 
         int screenMiddleX = event.getWindow().getGuiScaledWidth() / 2;
         int screenMiddleY = event.getWindow().getGuiScaledHeight() / 2;
 
-        Vec2 lookVec = new Vec2((float)mc.player.getLookAngle().x, (float)mc.player.getLookAngle().z);
-        Vec2 playerPos = new Vec2((float)mc.player.getX(), (float)mc.player.getZ());
-        for(HitIndicator hit : ClientLatestHits.latestHitIndicators) {
-            drawIndicator(event.getMatrixStack(), hit, screenMiddleX, screenMiddleY, playerPos, lookVec);
+        updateColorsIfNeeded();
+
+        Vec3 viewVector = calculateViewVector(0, mc.player.getYRot());
+        Vec2 lookVec = new Vec2((float)viewVector.x, (float)viewVector.z);
+        Vec2 playerPos = new Vec2((float) mc.player.getX(), (float) mc.player.getZ());
+        if (HitIndicatorClientConfigs.EdgeOfScreenMode.get()) {
+            for (HitIndicator hit : ClientLatestHits.latestHitIndicators)
+                drawIndicatorEdge(event.getMatrixStack(), hit, screenMiddleX, screenMiddleY, playerPos, lookVec);
+        } else {
+            for (HitIndicator hit : ClientLatestHits.latestHitIndicators)
+                drawIndicator(event.getMatrixStack(), hit, screenMiddleX, screenMiddleY, playerPos, lookVec);
         }
 
-        if(ClientLatestHits.currentHitMarker != null)
+        if (ClientLatestHits.currentHitMarker != null)
             drawHitMarker(event.getMatrixStack(), ClientLatestHits.currentHitMarker, screenMiddleX, screenMiddleY);
     }
+
+    private static void updateColorsIfNeeded() {
+        String currentHitColor = HitIndicatorClientConfigs.HitIndicatorColor.get();
+        String currentBlockColor = HitIndicatorClientConfigs.BlockIndicatorColor.get();
+        if (!lastHitColorString.equals(currentHitColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentHitColor, 16);
+                hitColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                hitColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                hitColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                hitColorR = 1.0F;
+                hitColorG = 0.0F;
+                hitColorB = 0.0F;
+            }
+            lastHitColorString = currentHitColor;
+        }
+
+        if (!lastBlockColorString.equals(currentBlockColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentBlockColor, 16);
+                blockColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                blockColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                blockColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                blockColorR = 0.0F;
+                blockColorG = 0.0F;
+                blockColorB = 1.0F;
+            }
+            lastBlockColorString = currentBlockColor;
+        }
+    }
+
     private static void drawHitMarker(PoseStack stack, HitMarker hitMarker, int screenMiddleX, int screenMiddleY) {
         float opacity = hitMarker.getType() == HitMarkerType.CRIT ? 30 : 60;
         opacity /= 100.0f;
 
         bindMarkerTexture(hitMarker.getType(), hitMarker.getLifeTime());
 
-        float defaultScale = 1;
-        int scaledTextureWidth = (int)Math.floor(markerWidth * defaultScale);
-        int scaledTextureHeight = (int)Math.floor(markerHeight * defaultScale);
-        RenderSystem.setShaderColor(1, 1, 1, opacity);
-        Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, opacity);
+        Gui.blit(stack, screenMiddleX - MARKER_WIDTH / 2, screenMiddleY - MARKER_HEIGHT / 2, 0, 0, MARKER_WIDTH, MARKER_HEIGHT, MARKER_WIDTH, MARKER_HEIGHT);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
     private static void drawIndicator(PoseStack stack, HitIndicator hit, int screenMiddleX, int screenMiddleY, Vec2 playerPos, Vec2 lookVec) {
         Vector3d sourceVec3d = hit.getLocation();
-        Vec2 diff = new Vec2((float)(sourceVec3d.x - playerPos.x), (float)(sourceVec3d.z - playerPos.y));
+        Vec2 diff = new Vec2((float) (sourceVec3d.x - playerPos.x), (float) (sourceVec3d.z - playerPos.y));
         double angleBetween = angleBetween(lookVec, diff);
-        float opacity = hit.getLifeTime() >= 25
-                ? HitIndicatorClientConfigs.IndicatorOpacity.get()
-                : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
-        opacity /= 100.0f;
-        int distanceFromCrosshair = HitIndicatorClientConfigs.DistanceFromCrosshair.get();
+        int distanceFromCrosshair = hit.getType() == HitIndicatorType.ND_HIT ? 0 : HitIndicatorClientConfigs.DistanceFromCrosshair.get();
 
-        float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
-        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(textureWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
-        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(textureHeight * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
+        float defaultScale = 1.0F + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0F;
+        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_WIDTH * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
+        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_HEIGHT * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
 
-        if(hit.getType() != HitIndicatorType.ND_RED) {
+        if (hit.getType() != HitIndicatorType.ND_HIT) {
             if (HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
-                float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
-                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
-                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
+                float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1.0F, 0.0F, 3.0F);
+                scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
+                scaledTextureHeight = (int)Math.floor(scaledTextureHeight * scale);
             }
 
             if (HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
@@ -105,47 +146,126 @@ public class RenderEvents {
                 float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
                 if (distanceScaling > 1) distanceScaling = 1;
                 if (distanceScaling < 0) distanceScaling = 0;
-                scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
-                scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+                scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
+                scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
             }
         }
 
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        bindIndicatorTexture(hit.getType());
+        bindTextureAndColor(hit);
 
         stack.pushPose();
-        RenderSystem.setShaderColor(1, 1, 1, opacity);
+
         stack.translate(screenMiddleX, screenMiddleY, 0);
-        if(hit.getType() != HitIndicatorType.ND_RED)
+        if (hit.getType() != HitIndicatorType.ND_HIT)
             stack.mulPose(Vector3f.ZP.rotationDegrees((float)angleBetween));
         stack.translate(-screenMiddleX, -screenMiddleY, 0);
-        Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_RED ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        Gui.blit(stack, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - distanceFromCrosshair,
+                0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         stack.popPose();
 
         RenderSystem.disableBlend();
     }
 
-    private static void bindIndicatorTexture(HitIndicatorType type) {
-        switch(type) {
-            case BLUE: RenderSystem.setShaderTexture(0, INDICATOR_BLUE);  break;
-            case ND_RED: RenderSystem.setShaderTexture(0, ND_RED_INDICATOR);  break;
-            default: RenderSystem.setShaderTexture(0, INDICATOR_RED);   break;
+    private static void drawIndicatorEdge(PoseStack stack, HitIndicator hit, int screenMiddleX, int screenMiddleY, Vec2 playerPos, Vec2 lookVec) {
+        if (hit.getType() == HitIndicatorType.ND_HIT && HitIndicatorClientConfigs.EdgeOfScreenMode.get())
+            return;
+
+        Vector3d sourceVec3d = hit.getLocation();
+        Vec2 diff = new Vec2((float)(sourceVec3d.x - playerPos.x), (float)(sourceVec3d.z - playerPos.y));
+        double angleBetween = angleBetween(lookVec, diff);
+
+        float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
+        int scaledTextureWidth = (int)Math.floor(EDGE_INDICATOR_WIDTH * defaultScale);
+        int scaledTextureHeight = (int)Math.floor(EDGE_INDICATOR_HEIGHT * defaultScale);
+
+        if (HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
+            float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1.0F, 0.0F, 3.0F);
+            scaledTextureWidth = (int)Math.floor(scaledTextureWidth * scale);
+            scaledTextureHeight = (int)Math.floor(scaledTextureHeight * scale);
         }
+
+        if (HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
+            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+            float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
+            float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
+            if (distanceScaling > 1) distanceScaling = 1;
+            if (distanceScaling < 0) distanceScaling = 0;
+            scaledTextureWidth = (int)Math.floor(scaledTextureWidth * distanceScaling);
+            scaledTextureHeight = (int)Math.floor(scaledTextureHeight * distanceScaling);
+        }
+
+        int blitX, blitY;
+        double targetAngle = -angleBetween;
+        if (targetAngle >= 45.0F && targetAngle <= 135.0F) {
+            blitX = 0;
+            blitY = (int)Mth.lerp((targetAngle - 45.0F) / (90.0F), 0, 2 * screenMiddleY - scaledTextureHeight);
+        } else if (targetAngle <= -45.0F && targetAngle >= -135.0F) {
+            blitX = 2 * screenMiddleX - scaledTextureWidth;
+            blitY = (int)Mth.lerp((targetAngle + 45.0F) / (-90.0F), 0, 2 * screenMiddleY - scaledTextureHeight);
+        } else if (targetAngle >= 0.0F && targetAngle <= 45.0) {
+            blitX = (int)Mth.lerp(targetAngle / 45.0F, screenMiddleX, 0);
+            blitY = 0;
+        } else if (targetAngle >= -45.0 && targetAngle <= 0.0F) {
+            blitX = (int)Mth.lerp(targetAngle / (-45.0F), screenMiddleX, 2 * screenMiddleX - scaledTextureWidth);
+            blitY = 0;
+        } else if (targetAngle <= 180F && targetAngle >= 135.0F) {
+            blitX = (int)Mth.lerp((targetAngle - 135.0F) / (45.0F), 0, screenMiddleX);
+            blitY = 2 * screenMiddleY - scaledTextureHeight;
+        } else {
+            blitX = (int)Mth.lerp((targetAngle + 135.0F) / (-45.0F), 2 * screenMiddleX - scaledTextureWidth, screenMiddleX);
+            blitY = 2 * screenMiddleY - scaledTextureHeight;
+        }
+
+        RenderSystem.enableBlend();
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
+        bindTextureAndColor(hit);
+
+        stack.pushPose();
+        stack.translate(blitX + scaledTextureWidth / 2.0F, blitY + scaledTextureHeight / 2.0F, 0);
+        stack.mulPose(Vector3f.ZP.rotationDegrees((float) angleBetween));
+        stack.translate(-blitX - scaledTextureWidth / 2.0F, -blitY - scaledTextureHeight / 2.0F, 0);
+
+        Gui.blit(stack, blitX, blitY,
+                0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        stack.popPose();
+
+        RenderSystem.disableBlend();
+    }
+
+    private static void bindTextureAndColor(HitIndicator hit) {
+        float opacity = hit.getLifeTime() >= 25
+                ? HitIndicatorClientConfigs.IndicatorOpacity.get()
+                : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
+        opacity /= 100.0f;
+
+        if (HitIndicatorClientConfigs.EdgeOfScreenMode.get()) RenderSystem.setShaderTexture(0, EDGE_INDICATOR);
+        else if (hit.getType() == HitIndicatorType.ND_HIT) RenderSystem.setShaderTexture(0, ND_INDICATOR);
+        else if (hit.getType() == HitIndicatorType.HIT) RenderSystem.setShaderTexture(0, INDICATOR);
+        else RenderSystem.setShaderTexture(0, INDICATOR_BLOCK);
+
+        if (hit.getType() == HitIndicatorType.ND_HIT || hit.getType() == HitIndicatorType.HIT)
+            RenderSystem.setShaderColor(hitColorR, hitColorG, hitColorB, opacity);
+        else
+            RenderSystem.setShaderColor(blockColorR, blockColorG, blockColorB, opacity);
     }
 
     private static void bindMarkerTexture(HitMarkerType type, int lifetime) {
-        switch(type) {
+        switch (type) {
             case KILL:
-                if(lifetime > 6) {
+                if (lifetime > 6) {
                     RenderSystem.setShaderTexture(0, MARKER_KILL[9 - lifetime]);
                     return;
                 }
                 RenderSystem.setShaderTexture(0, MARKER_KILL[3]);
                 break;
             default:
-                if(lifetime > 6) {
+                if (lifetime > 6) {
                     RenderSystem.setShaderTexture(0, MARKER_CRIT[9 - lifetime]);
                     return;
                 }
@@ -162,19 +282,22 @@ public class RenderEvents {
         return res;
     }
 
-    private static Vec2 getLookVec(LocalPlayer player) {
-        Vec2 vec = new Vec2((float)(-Math.sin(-player.getYRot() * Math.PI / 180.0 - Math.PI)), (float)(-Math.cos(-player.getYRot() * Math.PI / 180.0 - Math.PI)));
-        return vec;
-    }
-
     private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
-        if(Minecraft.getInstance().player == null)
-            return 0;
-
         Vec3 playerPos = Minecraft.getInstance().player.getPosition(0);
         double d0 = damageLocation.x - playerPos.x;
         double d1 = damageLocation.y - playerPos.y;
         double d2 = damageLocation.z - playerPos.z;
-        return (float)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+
+        return (float) Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
+    }
+
+    private static Vec3 calculateViewVector(float pPitch, float pYaw) {
+        float f = pPitch * ((float) Math.PI / 180F);
+        float f1 = -pYaw * ((float) Math.PI / 180F);
+        float f2 = Mth.cos(f1);
+        float f3 = Mth.sin(f1);
+        float f4 = Mth.cos(f);
+        float f5 = Mth.sin(f);
+        return new Vec3(f3 * f4, -f5, f2 * f4);
     }
 }

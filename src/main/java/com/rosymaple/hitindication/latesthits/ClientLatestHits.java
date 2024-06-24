@@ -1,13 +1,10 @@
 package com.rosymaple.hitindication.latesthits;
 
 import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
-import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.ArrayList;
-import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientLatestHits {
@@ -19,9 +16,9 @@ public class ClientLatestHits {
 
         if(!HitIndicatorClientConfigs.EnableHitIndication.get())
             return;
-        if(hitIndicatorType == HitIndicatorType.ND_RED && !HitIndicatorClientConfigs.EnableNonDirectionalDamage.get())
+        if(hitIndicatorType == HitIndicatorType.ND_HIT && !HitIndicatorClientConfigs.EnableNonDirectionalDamage.get())
             return;
-        if(hitIndicatorType == HitIndicatorType.BLUE && !HitIndicatorClientConfigs.ShowBlueIndicators.get())
+        if(hitIndicatorType == HitIndicatorType.BLOCK && !HitIndicatorClientConfigs.ShowBlueIndicators.get())
             return;
         if(hasNegativeEffects && !HitIndicatorClientConfigs.DisplayHitsFromNegativePotions.get())
             return;
