@@ -4,7 +4,6 @@ import com.rosymaple.hitindication.HitIndication;
 import com.rosymaple.hitindication.config.HitIndicatorConfig;
 import com.rosymaple.hitindication.latesthits.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -23,9 +22,10 @@ import javax.vecmath.Vector3d;
 
 @Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Side.CLIENT)
 public class RenderEvents {
-    private static final ResourceLocation INDICATOR_RED = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_red.png");
-    private static final ResourceLocation INDICATOR_BLUE = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_blue.png");
-    private static final ResourceLocation ND_RED_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
+    private static final ResourceLocation HIT_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator.png");
+    private static final ResourceLocation EDGE_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/edge_indicator.png");
+    private static final ResourceLocation BLOCK_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_block.png");
+    private static final ResourceLocation ND_HIT_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
     private static final ResourceLocation[] MARKER_CRIT = {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit1.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit2.png"),
@@ -38,12 +38,18 @@ public class RenderEvents {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill3.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_kill4.png")
     };
+    private static final int ND_TEXTURE_SIZE = 66;
+    private static final int INDICATOR_WIDTH = 42;
+    private static final int INDICATOR_HEIGHT = 13;
+    private static final int MARKER_WIDTH = 20;
+    private static final int MARKER_HEIGHT = 20;
+    private static final int EDGE_INDICATOR_WIDTH = 16;
+    private static final int EDGE_INDICATOR_HEIGHT = 16;
 
-    private static final int ndTextureSize = 66;
-    private static final int indicatorWidth = 42;
-    private static final int indicatorHeight = 13;
-    private static final int markerWidth = 20;
-    private static final int markerHeight = 20;
+    private static String lastHitColorString = "FF0000";
+    private static String lastBlockColorString = "0000FF";
+    private static float hitColorR = 1.0F, hitColorG = 0.0F, hitColorB = 0.0F;
+    private static float blockColorR = 0.0F, blockColorG = 0.0F, blockColorB = 1.0F;
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
@@ -57,13 +63,53 @@ public class RenderEvents {
         int screenMiddleX = scaledResolution.getScaledWidth() / 2;
         int screenMiddleY = scaledResolution.getScaledHeight() / 2;
 
-        Vector2d lookVec = getLookVec(mc.player);
-        Vector2d playerPos = new Vector2d(mc.player.posX, mc.player.posZ);
-        for(HitIndicator hitIndicator : ClientLatestHits.latestHitIndicators)
-            drawHitIndicator(hitIndicator, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
+        updateColorsIfNeeded();
+
+        Vector3d viewVec = calculateViewVector(0, mc.player.getPitchYaw().y);
+        Vector2d lookVec = new Vector2d((float)viewVec.x, (float)viewVec.z);
+        Vector2d playerPos = new Vector2d((float)mc.player.posX, (float)mc.player.posZ);
+        if (HitIndicatorConfig.EdgeOfScreenMode) {
+            for (HitIndicator hit : ClientLatestHits.latestHitIndicators)
+                drawIndicatorEdge(hit, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
+        } else {
+            for (HitIndicator hit : ClientLatestHits.latestHitIndicators)
+                drawIndicator(hit, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
+        }
 
         if(ClientLatestHits.currentHitMarker != null)
             drawHitMarker(ClientLatestHits.currentHitMarker, textureManager, screenMiddleX, screenMiddleY);
+    }
+
+    private static void updateColorsIfNeeded() {
+        String currentHitColor = HitIndicatorConfig.HitIndicatorColor;
+        String currentBlockColor = HitIndicatorConfig.BlockIndicatorColor;
+        if (!lastHitColorString.equals(currentHitColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentHitColor, 16);
+                hitColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                hitColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                hitColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                hitColorR = 1.0F;
+                hitColorG = 0.0F;
+                hitColorB = 0.0F;
+            }
+            lastHitColorString = currentHitColor;
+        }
+
+        if (!lastBlockColorString.equals(currentBlockColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentBlockColor, 16);
+                blockColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                blockColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                blockColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                blockColorR = 0.0F;
+                blockColorG = 0.0F;
+                blockColorB = 1.0F;
+            }
+            lastBlockColorString = currentBlockColor;
+        }
     }
 
     private static void drawHitMarker(HitMarker hitMarker, TextureManager textureManager, int screenMiddleX, int screenMiddleY) {
@@ -73,36 +119,32 @@ public class RenderEvents {
         bindMarkerTexture(textureManager, hitMarker.getType(), hitMarker.getLifeTime());
 
         float defaultScale = 1;
-        int scaledTextureWidth = (int)Math.floor(markerWidth * defaultScale);
-        int scaledTextureHeight = (int)Math.floor(markerHeight * defaultScale);
+        int scaledTextureWidth = (int)Math.floor(MARKER_WIDTH * defaultScale);
+        int scaledTextureHeight = (int)Math.floor(MARKER_HEIGHT * defaultScale);
         GL11.glColor4f(1, 1, 1, opacity);
         Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 , 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         GL11.glColor4f(1, 1, 1, 1);
     }
 
-    private static void drawHitIndicator(HitIndicator hitIndicator, TextureManager textureManager, int screenMiddleX, int screenMiddleY, Vector2d playerPos, Vector2d lookVec) {
-        Vector3d sourceVec3d = hitIndicator.getLocation();
-        Vector2d diff = new Vector2d(sourceVec3d.x - playerPos.x, sourceVec3d.z - playerPos.y);
+    private static void drawIndicator(HitIndicator hit, TextureManager textureManager, int screenMiddleX, int screenMiddleY, Vector2d playerPos, Vector2d lookVec) {
+        Vector3d sourceVec3d = hit.getLocation();
+        Vector2d diff = new Vector2d((float)(sourceVec3d.x - playerPos.x), (float)(sourceVec3d.z - playerPos.y));
         double angleBetween = angleBetween(lookVec, diff);
-        float opacity = hitIndicator.getLifeTime() >= 25
-                ? HitIndicatorConfig.IndicatorOpacity
-                : HitIndicatorConfig.IndicatorOpacity * hitIndicator.getLifeTime() / 25.0f;
-        opacity /= 100.0f;
         int distanceFromCrosshair = HitIndicatorConfig.DistanceFromCrosshair;
 
         float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
-        int scaledTextureWidth = hitIndicator.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(indicatorWidth * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
-        int scaledTextureHeight = hitIndicator.getType() != HitIndicatorType.ND_RED ? (int)Math.floor(indicatorHeight * defaultScale) : (int)Math.floor(ndTextureSize * 1.25);
+        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_WIDTH * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
+        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_HEIGHT * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
 
-        if(hitIndicator.getType() != HitIndicatorType.ND_RED) {
+        if(hit.getType() != HitIndicatorType.ND_HIT) {
             if (HitIndicatorConfig.SizeDependsOnDamage) {
-                float scale = MathHelper.clamp(hitIndicator.getDamagePercent() > 30 ? 1 + hitIndicator.getDamagePercent() / 125.0f : 1, 0, 3);
+                float scale = MathHelper.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
                 scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
                 scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
             }
 
             if (HitIndicatorConfig.EnableDistanceScaling) {
-                float distanceFromPlayer = calculateDistanceFromPlayer(hitIndicator.getLocation());
+                float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
                 float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
                 float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
                 if (distanceScaling > 1) distanceScaling = 1;
@@ -112,25 +154,97 @@ public class RenderEvents {
             }
         }
 
-        bindIndicatorTexture(textureManager, hitIndicator.getType());
+        bindTextureAndColor(textureManager, hit);
 
         GL11.glPushMatrix();
-        GL11.glColor4f(1, 1, 1, opacity);
         GL11.glTranslatef(screenMiddleX, screenMiddleY, 0);
-        if(hitIndicator.getType() != HitIndicatorType.ND_RED)
+        if(hit.getType() != HitIndicatorType.ND_HIT)
             GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
-        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hitIndicator.getType() == HitIndicatorType.ND_RED ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+        Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
 
-    private static void bindIndicatorTexture(TextureManager textureManager, HitIndicatorType type) {
-        switch(type) {
-            case BLUE: textureManager.bindTexture(INDICATOR_BLUE);  break;
-            case ND_RED: textureManager.bindTexture(ND_RED_INDICATOR);  break;
-            default: textureManager.bindTexture(INDICATOR_RED);  break;
+    private static void drawIndicatorEdge(HitIndicator hit, TextureManager textureManager, int screenMiddleX, int screenMiddleY, Vector2d playerPos, Vector2d lookVec) {
+        if (hit.getType() == HitIndicatorType.ND_HIT && HitIndicatorConfig.EdgeOfScreenMode)
+            return;
+
+        Vector3d sourceVec3d = hit.getLocation();
+        Vector2d diff = new Vector2d((float)(sourceVec3d.x - playerPos.x), (float)(sourceVec3d.z - playerPos.y));
+        double angleBetween = angleBetween(lookVec, diff);
+
+        float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
+        int scaledTextureWidth = (int)Math.floor(EDGE_INDICATOR_WIDTH * defaultScale);
+        int scaledTextureHeight = (int)Math.floor(EDGE_INDICATOR_HEIGHT * defaultScale);
+
+        if (HitIndicatorConfig.SizeDependsOnDamage) {
+            float scale = MathHelper.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
+            scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
+            scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
         }
+
+        if (HitIndicatorConfig.EnableDistanceScaling) {
+            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+            float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
+            float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
+            if (distanceScaling > 1) distanceScaling = 1;
+            if (distanceScaling < 0) distanceScaling = 0;
+            scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
+            scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
+        }
+
+        bindTextureAndColor(textureManager, hit);
+
+        int blitX, blitY;
+        double targetAngle = -angleBetween;
+        if (targetAngle >= 45.0F && targetAngle <= 135.0F) {
+            blitX = 0;
+            blitY = (int) MathHelper.clampedLerp(0, 2 * screenMiddleY - scaledTextureHeight, (targetAngle - 45.0F) / (90.0F));
+        } else if (targetAngle <= -45.0F && targetAngle >= -135.0F) {
+            blitX = 2 * screenMiddleX - scaledTextureWidth;
+            blitY = (int)MathHelper.clampedLerp(0, 2 * screenMiddleY - scaledTextureHeight, (targetAngle + 45.0F) / (-90.0F));
+        } else if (targetAngle >= 0.0F && targetAngle <= 45.0) {
+            blitX = (int)MathHelper.clampedLerp(screenMiddleX, 0, targetAngle / 45.0F);
+            blitY = 0;
+        } else if (targetAngle >= -45.0 && targetAngle <= 0.0F) {
+            blitX = (int)MathHelper.clampedLerp(screenMiddleX, 2 * screenMiddleX - scaledTextureWidth, targetAngle / (-45.0F));
+            blitY = 0;
+        } else if (targetAngle <= 180F && targetAngle >= 135.0F) {
+            blitX = (int)MathHelper.clampedLerp(0, screenMiddleX, (targetAngle - 135.0F) / (45.0F));
+            blitY = 2 * screenMiddleY - scaledTextureHeight;
+        } else {
+            blitX = (int)MathHelper.clampedLerp(2 * screenMiddleX - scaledTextureWidth, screenMiddleX, (targetAngle + 135.0F) / (-45.0F));
+            blitY = 2 * screenMiddleY - scaledTextureHeight;
+        }
+
+        GL11.glPushMatrix();
+        GL11.glTranslatef(blitX + scaledTextureWidth / 2.0F, blitY + scaledTextureHeight / 2.0F, 0);
+        GL11.glRotatef((float)angleBetween, 0, 0, 1);
+        GL11.glTranslatef(-blitX - scaledTextureWidth / 2.0F, -blitY - scaledTextureHeight / 2.0F, 0);
+
+        Gui.drawModalRectWithCustomSizedTexture(blitX, blitY,
+                0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+
+        GL11.glColor4f(1, 1, 1, 1);
+        GL11.glPopMatrix();
+    }
+
+    private static void bindTextureAndColor(TextureManager textureManager, HitIndicator hit) {
+        float opacity = hit.getLifeTime() >= 25
+                ? HitIndicatorConfig.IndicatorOpacity
+                : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f;
+        opacity /= 100.0f;
+
+        if (HitIndicatorConfig.EdgeOfScreenMode) textureManager.bindTexture(EDGE_INDICATOR);
+        else if (hit.getType() == HitIndicatorType.ND_HIT) textureManager.bindTexture(ND_HIT_INDICATOR);
+        else if (hit.getType() == HitIndicatorType.HIT) textureManager.bindTexture(HIT_INDICATOR);
+        else textureManager.bindTexture(BLOCK_INDICATOR);
+
+        if (hit.getType() == HitIndicatorType.ND_HIT || hit.getType() == HitIndicatorType.HIT)
+            GL11.glColor4f(hitColorR, hitColorG, hitColorB, opacity);
+        else
+            GL11.glColor4f(blockColorR, blockColorG, blockColorB, opacity);
     }
 
     private static void bindMarkerTexture(TextureManager textureManager, HitMarkerType type, int lifetime) {
@@ -160,14 +274,17 @@ public class RenderEvents {
         return res;
     }
 
-    private static Vector2d getLookVec(EntityPlayerSP player) {
-        return new Vector2d(-Math.sin(-player.rotationYaw * Math.PI / 180.0 - Math.PI), -Math.cos(-player.rotationYaw * Math.PI / 180.0 - Math.PI));
+    private static Vector3d calculateViewVector(float pPitch, float pYaw) {
+        float f = pPitch * ((float) Math.PI / 180F);
+        float f1 = -pYaw * ((float) Math.PI / 180F);
+        double f2 = Math.cos(f1);
+        double f3 = Math.sin(f1);
+        double f4 = Math.cos(f);
+        double f5 = Math.sin(f);
+        return new Vector3d(f3 * f4, -f5, f2 * f4);
     }
 
     private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
-        if(Minecraft.getMinecraft().player == null)
-            return 0;
-
         Vec3d playerPos = Minecraft.getMinecraft().player.getPositionVector();
         double d0 = damageLocation.x - playerPos.x;
         double d1 = damageLocation.y - playerPos.y;

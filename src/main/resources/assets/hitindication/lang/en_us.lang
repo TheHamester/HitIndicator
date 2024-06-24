@@ -39,3 +39,12 @@ hitindication.gui.config.indicators.enable_non_directional_damage.tooltip=Shows 
 
 hitindication.gui.config.indicators.distance_from_crosshair=Distance From Crosshair
 hitindication.gui.config.indicators.distance_from_crosshair.tooltip=Determines distance of an indicator from crosshair.
+
+hitindication.gui.config.indicators.edge_of_screen_mode=Edge of Screen Mode
+hitindication.gui.config.indicators.edge_of_screen_mode.tooltip=The indicators will appear on the edges of your screen instead of near the crosshair
+
+hitindication.gui.config.indicators.hit_indicator_color=Hit Indicator Color
+hitindication.gui.config.indicators.hit_indicator_color.tooltip=Determines the color of the hit indicator
+
+hitindication.gui.config.indicators.block_indicator_color=Block Hit Indicator Color
+hitindication.gui.config.indicators.block_indicator_color.tooltip=Determines the color of the block indicator

@@ -16,9 +16,9 @@ public class ClientLatestHits {
 
         if(!HitIndicatorConfig.EnableHitIndication)
             return;
-        if(hitIndicatorType == HitIndicatorType.ND_RED && !HitIndicatorConfig.EnableNonDirectionalDamage)
+        if(hitIndicatorType == HitIndicatorType.ND_HIT && !HitIndicatorConfig.EnableNonDirectionalDamage)
             return;
-        if(hitIndicatorType == HitIndicatorType.BLUE && !HitIndicatorConfig.ShowBlueIndicators)
+        if(hitIndicatorType == HitIndicatorType.BLOCK && !HitIndicatorConfig.ShowBlueIndicators)
             return;
 
         if(hasNegativeEffects && !HitIndicatorConfig.DisplayHitsFromNegativePotions)

@@ -32,6 +32,9 @@ public class HitIndicatorConfig {
     public static int DistanceScalingCutoff;
     public static boolean EnableNonDirectionalDamage;
     public static int DistanceFromCrosshair;
+    public static boolean EdgeOfScreenMode;
+    public static String HitIndicatorColor;
+    public static String BlockIndicatorColor;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -101,6 +104,15 @@ public class HitIndicatorConfig {
         Property enableNonDirectionalDamage = config.get(CATEGORY_NAME_INDICATOR, "enable_non_directional_damage", false);
         enableNonDirectionalDamage.setLanguageKey("hitindication.gui.config.indicators.enable_non_directional_damage");
 
+        Property edgeOfScreenMode = config.get(CATEGORY_NAME_INDICATOR, "edge_of_screen_mode", false);
+        edgeOfScreenMode.setLanguageKey("hitindication.gui.config.indicators.edge_of_screen_mode");
+
+        Property hitIndicatorColor = config.get(CATEGORY_NAME_INDICATOR, "hit_indicator_color", "FF0000");
+        hitIndicatorColor.setLanguageKey("hitindication.gui.config.indicators.hit_indicator_color");
+
+        Property blockIndicatorColor = config.get(CATEGORY_NAME_INDICATOR, "block_indicator_color", "0000FF");
+        blockIndicatorColor.setLanguageKey("hitindication.gui.config.indicators.block_indicator_color");
+
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(enableHitIndication.getName());
         propertyOrderIndicators.add(maxIndicatorCount.getName());
@@ -115,6 +127,9 @@ public class HitIndicatorConfig {
         propertyOrderIndicators.add(enableDistanceScaling.getName());
         propertyOrderIndicators.add(distanceScalingCutoff.getName());
         propertyOrderIndicators.add(enableHitMarkers.getName());
+        propertyOrderIndicators.add(edgeOfScreenMode.getName());
+        propertyOrderIndicators.add(hitIndicatorColor.getName());
+        propertyOrderIndicators.add(blockIndicatorColor.getName());
         config.setCategoryPropertyOrder(CATEGORY_NAME_INDICATOR, propertyOrderIndicators);
 
         if(readFromConfigFile) {
@@ -131,6 +146,9 @@ public class HitIndicatorConfig {
             EnableHitMarkers = enableHitMarkers.getBoolean();
             EnableNonDirectionalDamage = enableNonDirectionalDamage.getBoolean();
             DistanceFromCrosshair = distanceFromCrosshair.getInt();
+            EdgeOfScreenMode = edgeOfScreenMode.getBoolean();
+            HitIndicatorColor = hitIndicatorColor.getString();
+            BlockIndicatorColor = blockIndicatorColor.getString();
         }
 
         if(config.hasChanged())
