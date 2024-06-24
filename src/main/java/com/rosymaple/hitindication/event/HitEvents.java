@@ -7,8 +7,8 @@ import com.rosymaple.hitindication.latesthits.PacketsHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.entity.projectile.PotionEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
@@ -17,7 +17,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.ProjectileImpactEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -45,12 +44,12 @@ public class HitEvents {
             ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
             int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
 
-            PacketsHelper.addHitIndicator(player, null, HitIndicatorType.ND_RED, damagePercent, false);
+            PacketsHelper.addHitIndicator(player, null, HitIndicatorType.ND_HIT, damagePercent, false);
             return;
         }
 
         if(event.getSource().getTrueSource() instanceof ServerPlayerEntity) {
-            if(event.getSource().getImmediateSource() instanceof ArrowEntity)
+            if(event.getSource().getImmediateSource() instanceof ProjectileEntity)
                 PacketsHelper.addHitMarker((ServerPlayerEntity)event.getSource().getTrueSource(), HitMarkerType.CRIT);
         }
 
@@ -62,7 +61,7 @@ public class HitEvents {
 
         int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
 
-        PacketsHelper.addHitIndicator(player, source, HitIndicatorType.RED, damagePercent, false);
+        PacketsHelper.addHitIndicator(player, source, HitIndicatorType.HIT, damagePercent, false);
     }
 
     @SubscribeEvent
@@ -116,7 +115,7 @@ public class HitEvents {
         boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), player.getActiveItemStack(), player, source);
 
         if(playerIsBlocking)
-            PacketsHelper.addHitIndicator(player, source, HitIndicatorType.BLUE, shieldAboutToBreak ? 125 : 0, false);
+            PacketsHelper.addHitIndicator(player, source, HitIndicatorType.BLOCK, shieldAboutToBreak ? 125 : 0, false);
     }
 
     @SubscribeEvent
@@ -151,7 +150,7 @@ public class HitEvents {
                     damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
                 }
 
-                PacketsHelper.addHitIndicator(player, source, HitIndicatorType.RED, damagePercent, hasNegativeEffects && !damagingPotion);
+                PacketsHelper.addHitIndicator(player, source, HitIndicatorType.HIT, damagePercent, hasNegativeEffects && !damagingPotion);
             }
         }
     }

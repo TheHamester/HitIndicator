@@ -19,6 +19,9 @@ public class HitIndicatorClientConfigs {
     public static final ForgeConfigSpec.ConfigValue<Integer> DistanceScalingCutoff;
     public static final ForgeConfigSpec.ConfigValue<Boolean> EnableNonDirectionalDamage;
     public static final ForgeConfigSpec.ConfigValue<Integer> DistanceFromCrosshair;
+    public static final ForgeConfigSpec.ConfigValue<Boolean> EdgeOfScreenMode;
+    public static final ForgeConfigSpec.ConfigValue<String> HitIndicatorColor;
+    public static final ForgeConfigSpec.ConfigValue<String> BlockIndicatorColor;
 
     static {
         BUILDER.push("Hit Indication Config");
@@ -74,6 +77,18 @@ public class HitIndicatorClientConfigs {
         DistanceScalingCutoff = BUILDER.comment("Distance from entity after which indicator starts to become gradually smaller.")
                 .translation("hitindication.configgui.distance_scaling_cutoff")
                 .defineInRange("Distance Scaling Cutoff", 10, 0, Integer.MAX_VALUE);
+
+        EdgeOfScreenMode = BUILDER.comment("The indicators will appear on the edges of your screen instead of near the crosshair")
+                .translation("hitindication.configgui.edge_of_screen_mode")
+                .define("Edge of Screen Mode", false);
+
+        HitIndicatorColor = BUILDER.comment("Determines the color of the hit indicator")
+                .translation("hitindication.configgui.hit_indicator_color")
+                .define("Hit Indicator Color", "FF0000");
+
+        BlockIndicatorColor = BUILDER.comment("Determines the color of the block indicator")
+                .translation("hitindication.configgui.block_indicator_color")
+                .define("Block Indicator Color", "0000FF");
 
         BUILDER.pop();
         SPEC = BUILDER.build();

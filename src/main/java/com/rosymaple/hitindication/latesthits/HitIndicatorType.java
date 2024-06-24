@@ -1,7 +1,7 @@
 package com.rosymaple.hitindication.latesthits;
 
 public enum HitIndicatorType {
-    RED(0), BLUE(1), ND_RED(2);
+    HIT(0), BLOCK(1), ND_HIT(2);
 
     int type;
 
@@ -11,9 +11,9 @@ public enum HitIndicatorType {
 
     static HitIndicatorType fromInt(int integerType) {
         switch(integerType) {
-            case 1: return HitIndicatorType.BLUE;
-            case 2: return HitIndicatorType.ND_RED;
-            default: return HitIndicatorType.RED;
+            case 1: return HitIndicatorType.BLOCK;
+            case 2: return HitIndicatorType.ND_HIT;
+            default: return HitIndicatorType.HIT;
         }
     }
 }
