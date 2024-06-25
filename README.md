@@ -20,7 +20,7 @@ This can be used in any modpack without asking for premission as long as you giv
 
 ### Update 1.4
 * Added config options for setting a color of the hit and block indicators
-* Added config options to toggle scren edge mode, which will render the indicators on the edge of the screen instead of close to crosshair
+* Added config options to toggle screen edge mode, which will render the indicators on the edge of the screen instead of close to crosshair
 * Now any damaging projectile display a hit marker, not just arrows
 
 ### Patch 1.3.1
