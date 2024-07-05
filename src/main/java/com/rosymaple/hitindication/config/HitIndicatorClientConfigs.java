@@ -22,6 +22,11 @@ public class HitIndicatorClientConfigs {
     public static final ForgeConfigSpec.ConfigValue<Boolean> EdgeOfScreenMode;
     public static final ForgeConfigSpec.ConfigValue<String> HitIndicatorColor;
     public static final ForgeConfigSpec.ConfigValue<String> BlockIndicatorColor;
+    public static final ForgeConfigSpec.ConfigValue<String> ProximityIndicatorColor;
+
+    public static final ForgeConfigSpec.ConfigValue<Boolean> EnableProximityIndicators;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ProximityIndicatorRadius;
+    public static final ForgeConfigSpec.ConfigValue<Integer> ProximityIndicatorBorder;
 
     static {
         BUILDER.push("Hit Indication Config");
@@ -82,6 +87,18 @@ public class HitIndicatorClientConfigs {
                 .translation("hitindication.configgui.edge_of_screen_mode")
                 .define("Edge of Screen Mode", false);
 
+        EnableProximityIndicators = BUILDER.comment("Enables proximity indicators")
+                .translation("hitindication.configgui.enable_proximity_indicators")
+                .define("Enable Proximity Indicators", false);
+
+        ProximityIndicatorRadius = BUILDER.comment("Determines the radius within which proximity indicators will be shown.")
+                .translation("hitindication.configgui.proximity_indicator_radius")
+                .defineInRange("Proximity Indicator Radius", 10, 1, 100);
+
+        ProximityIndicatorBorder = BUILDER.comment("Determines the border radius of the proximity indicator for better contrast")
+                .translation("hitindication.configgui.proximity_indicator_border")
+                .defineInRange("Proximity Indicator Border", 0, 0, 10);
+
         HitIndicatorColor = BUILDER.comment("Determines the color of the hit indicator")
                 .translation("hitindication.configgui.hit_indicator_color")
                 .define("Hit Indicator Color", "FF0000");
@@ -89,6 +106,10 @@ public class HitIndicatorClientConfigs {
         BlockIndicatorColor = BUILDER.comment("Determines the color of the block indicator")
                 .translation("hitindication.configgui.block_indicator_color")
                 .define("Block Indicator Color", "0000FF");
+
+        ProximityIndicatorColor = BUILDER.comment("Determines the color of the proximity indicator")
+                .translation("hitindication.configgui.proximity_indicator_color")
+                .define("Proximity Indicator Color", "2F86C4");
 
         BUILDER.pop();
         SPEC = BUILDER.build();
