@@ -1,8 +1,10 @@
 package com.rosymaple.hitindication;
 
 import com.mojang.logging.LogUtils;
+import com.rosymaple.hitindication.client.ModKeyBindings;
 import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 import com.rosymaple.hitindication.networking.ModPackets;
+import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -34,6 +36,11 @@ public class HitIndication
 
     private void setup(final FMLCommonSetupEvent event) {
         ModPackets.register();
+
+        ModKeyBindings.init();
+        ClientRegistry.registerKeyBinding(ModKeyBindings.toggleHitIndication);
+        ClientRegistry.registerKeyBinding(ModKeyBindings.toggleProximityIndicators);
+        ClientRegistry.registerKeyBinding(ModKeyBindings.toggleEdgeOfScreenMode);
     }
 
 }
