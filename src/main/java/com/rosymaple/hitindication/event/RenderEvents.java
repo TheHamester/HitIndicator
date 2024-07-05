@@ -7,19 +7,22 @@ import com.rosymaple.hitindication.config.HitIndicatorClientConfigs;
 import com.rosymaple.hitindication.latesthits.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
 import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.joml.Vector3d;
+
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Dist.CLIENT)
 public class RenderEvents {
@@ -49,10 +52,10 @@ public class RenderEvents {
 
     private static String lastHitColorString = "FF0000";
     private static String lastBlockColorString = "0000FF";
+    private static String lastProximityColorString = "2F86C4";
     private static float hitColorR = 1.0F, hitColorG = 0.0F, hitColorB = 0.0F;
     private static float blockColorR = 0.0F, blockColorG = 0.0F, blockColorB = 1.0F;
-
-    private static ResourceLocation itemNameOverlay = new ResourceLocation("item_name");
+    private static float proximityColorR = 0.18431F, proximityColorG = 0.52549F, proximityColorB = 0.76862F;
 
     @SubscribeEvent
     public static void onRender(RenderGuiOverlayEvent.Post event) {
@@ -60,7 +63,7 @@ public class RenderEvents {
             return;
 
         Minecraft mc = Minecraft.getInstance();
-        if(mc.player == null)
+        if(mc.player == null || mc.level == null)
             return;
 
         int screenMiddleX = event.getWindow().getGuiScaledWidth() / 2;
@@ -79,6 +82,17 @@ public class RenderEvents {
                 drawIndicator(event.getGuiGraphics(), hit, screenMiddleX, screenMiddleY, playerPos, lookVec);
         }
 
+        if(HitIndicatorClientConfigs.EnableProximityIndicators.get()) {
+            List<Entity> entities = mc.level.getEntitiesOfClass(Entity.class, new AABB(mc.player.blockPosition()).inflate(HitIndicatorClientConfigs.ProximityIndicatorRadius.get()));
+            for(Entity e : entities) {
+                if(!(e instanceof Projectile proj && (Math.abs(proj.xOld - proj.getX()) > 0.1F || Math.abs(proj.yOld - proj.getY()) > 0.1F || Math.abs(proj.zOld - proj.getZ()) > 0.1F)) && e.getType().getCategory().isFriendly())
+                    continue;
+
+                HitIndicator indicator = new HitIndicator(e.getX(), e.getY(), e.getZ(), HitIndicatorType.PROXIMITY, 0);
+                drawIndicator(event.getGuiGraphics(), indicator, screenMiddleX, screenMiddleY, playerPos, lookVec);
+            }
+        }
+
         if (ClientLatestHits.currentHitMarker != null)
             drawHitMarker(event.getGuiGraphics(), ClientLatestHits.currentHitMarker, screenMiddleX, screenMiddleY);
     }
@@ -86,6 +100,7 @@ public class RenderEvents {
     private static void updateColorsIfNeeded() {
         String currentHitColor = HitIndicatorClientConfigs.HitIndicatorColor.get();
         String currentBlockColor = HitIndicatorClientConfigs.BlockIndicatorColor.get();
+        String currentProximityColor = HitIndicatorClientConfigs.ProximityIndicatorColor.get();
         if (!lastHitColorString.equals(currentHitColor)) {
             try {
                 int parsedValue = Integer.parseInt(currentHitColor, 16);
@@ -113,6 +128,20 @@ public class RenderEvents {
             }
             lastBlockColorString = currentBlockColor;
         }
+
+        if (!lastProximityColorString.equals(currentProximityColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentProximityColor, 16);
+                proximityColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                proximityColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                proximityColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                proximityColorR = 0.18431F;
+                proximityColorG = 0.52549F;
+                proximityColorB = 0.76862F;
+            }
+            lastProximityColorString = currentProximityColor;
+        }
     }
 
     private static void drawHitMarker(GuiGraphics gui, HitMarker hitMarker, int screenMiddleX, int screenMiddleY) {
@@ -136,10 +165,17 @@ public class RenderEvents {
         int distanceFromCrosshair = HitIndicatorClientConfigs.DistanceFromCrosshair.get();
 
         float defaultScale = 1 + HitIndicatorClientConfigs.IndicatorDefaultScale.get() / 100.0f;
-        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_WIDTH * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
-        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_HEIGHT * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
+        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor((hit.getType() == HitIndicatorType.PROXIMITY ? EDGE_INDICATOR_WIDTH : INDICATOR_WIDTH) * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
+        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor((hit.getType() == HitIndicatorType.PROXIMITY ? EDGE_INDICATOR_HEIGHT : INDICATOR_HEIGHT) * defaultScale) : (int)Math.floor(ND_INDICATOR_WIDTH * 1.25);
 
-        if(hit.getType() != HitIndicatorType.ND_HIT) {
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+            distanceFromCrosshair -= 10;
+            scaledTextureWidth *= 0.75F;
+            scaledTextureHeight *= 0.75F;
+        }
+
+        if(hit.getType() != HitIndicatorType.ND_HIT && hit.getType() != HitIndicatorType.PROXIMITY) {
             if (HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
                 float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
                 scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
@@ -147,7 +183,6 @@ public class RenderEvents {
             }
 
             if (HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
-                float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
                 float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
                 float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
                 if (distanceScaling > 1) distanceScaling = 1;
@@ -157,16 +192,31 @@ public class RenderEvents {
             }
         }
 
+        float opacity = hit.getType() != HitIndicatorType.PROXIMITY ?
+                (hit.getLifeTime() >= 25
+                        ? HitIndicatorClientConfigs.IndicatorOpacity.get()
+                        : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
+                : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        int border = 2 * HitIndicatorClientConfigs.ProximityIndicatorBorder.get();
+
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        ResourceLocation atlasLocation = getTextureAndSetColor(hit);
+        ResourceLocation atlasLocation = getTexture(hit);
 
         gui.pose().pushPose();
         gui.pose().translate(screenMiddleX, screenMiddleY, 0);
         if(hit.getType() != HitIndicatorType.ND_HIT)
             gui.pose().mulPose(Axis.ZP.rotationDegrees((float)angleBetween));
         gui.pose().translate(-screenMiddleX, -screenMiddleY, 0);
+
+        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+            RenderSystem.setShaderColor(1, 1, 1, opacity);
+            gui.blit(atlasLocation, screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
+        }
+
+        setColor(hit, opacity);
         gui.blit(atlasLocation, screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+
         RenderSystem.setShaderColor(1, 1, 1, 1);
         gui.pose().popPose();
 
@@ -185,6 +235,8 @@ public class RenderEvents {
         int scaledTextureWidth = (int)Math.floor(EDGE_INDICATOR_WIDTH * defaultScale);
         int scaledTextureHeight = (int)Math.floor(EDGE_INDICATOR_HEIGHT * defaultScale);
 
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+
         if (HitIndicatorClientConfigs.SizeDependsOnDamage.get()) {
             float scale = Mth.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
             scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
@@ -192,7 +244,6 @@ public class RenderEvents {
         }
 
         if (HitIndicatorClientConfigs.EnableDistanceScaling.get()) {
-            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
             float distanceScalingCutoff = HitIndicatorClientConfigs.DistanceScalingCutoff.get();
             float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
             if (distanceScaling > 1) distanceScaling = 1;
@@ -223,9 +274,16 @@ public class RenderEvents {
             blitY = 2 * screenMiddleY - scaledTextureHeight;
         }
 
+        float opacity = hit.getType() != HitIndicatorType.PROXIMITY ?
+                (hit.getLifeTime() >= 25
+                        ? HitIndicatorClientConfigs.IndicatorOpacity.get()
+                        : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
+                : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        ResourceLocation atlasLocation = getTextureAndSetColor(hit);
+        ResourceLocation atlasLocation = getTexture(hit);
+        setColor(hit, opacity);
 
         gui.pose().pushPose();
 
@@ -240,21 +298,21 @@ public class RenderEvents {
         RenderSystem.disableBlend();
     }
 
-    private static ResourceLocation getTextureAndSetColor(HitIndicator hit) {
-        float opacity = hit.getLifeTime() >= 25
-                ? HitIndicatorClientConfigs.IndicatorOpacity.get()
-                : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f;
-        opacity /= 100.0f;
-
-        if (hit.getType() == HitIndicatorType.ND_HIT || hit.getType() == HitIndicatorType.HIT)
-            RenderSystem.setShaderColor(hitColorR, hitColorG, hitColorB, opacity);
-        else
-            RenderSystem.setShaderColor(blockColorR, blockColorG, blockColorB, opacity);
-
+    private static ResourceLocation getTexture(HitIndicator hit) {
         if (HitIndicatorClientConfigs.EdgeOfScreenMode.get()) return EDGE_INDICATOR;
         else if (hit.getType() == HitIndicatorType.ND_HIT) return ND_INDICATOR;
         else if (hit.getType() == HitIndicatorType.HIT) return INDICATOR;
+        else if (hit.getType() == HitIndicatorType.PROXIMITY) return EDGE_INDICATOR;
         else return INDICATOR_BLOCK;
+    }
+
+    private static void setColor(HitIndicator hit, float opacity) {
+        if (hit.getType() == HitIndicatorType.ND_HIT || hit.getType() == HitIndicatorType.HIT)
+            RenderSystem.setShaderColor(hitColorR, hitColorG, hitColorB, opacity);
+        else if(hit.getType() == HitIndicatorType.BLOCK)
+            RenderSystem.setShaderColor(blockColorR, blockColorG, blockColorB, opacity);
+        else
+            RenderSystem.setShaderColor(proximityColorR, proximityColorG, proximityColorB, opacity);
     }
 
     private static ResourceLocation getMarkerTexture(HitMarkerType type, int lifetime) {
@@ -280,14 +338,14 @@ public class RenderEvents {
         return res;
     }
 
-    private static float calculateDistanceFromPlayer(Vector3d damageLocation) {
+    private static float calculateDistanceFromPlayer(Vector3d location) {
         if(Minecraft.getInstance().player == null)
             return 0;
 
         Vec3 playerPos = Minecraft.getInstance().player.getPosition(0);
-        double d0 = damageLocation.x - playerPos.x;
-        double d1 = damageLocation.y - playerPos.y;
-        double d2 = damageLocation.z - playerPos.z;
+        double d0 = location.x - playerPos.x;
+        double d1 = location.y - playerPos.y;
+        double d2 = location.z - playerPos.z;
         return (float)Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
     }
 
