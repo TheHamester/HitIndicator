@@ -18,6 +18,14 @@ This can be used in any modpack without asking for premission as long as you giv
 
 ## Changelog
 
+### Update 1.5
+* Added proximity indicators, that are shown around the player when a mob or projectile gets close
+* Added config options to enable/disable proximity indicators
+* Added config options to modify color of proximity indicators
+* Added config option to modify the proximity show indicator radius
+* Added config option to modify width of white border around proximity indicator for better contrast
+* Added keybindings for toggling certain types of indicators
+
 ### Update 1.4
 * Added config options for setting a color of the hit and block indicators
 * Added config options to toggle screen edge mode, which will render the indicators on the edge of the screen instead of close to crosshair

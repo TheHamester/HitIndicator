@@ -1,6 +1,8 @@
 package com.rosymaple.hitindication.event;
 
 import com.rosymaple.hitindication.HitIndication;
+import com.rosymaple.hitindication.client.ModKeyBindings;
+import com.rosymaple.hitindication.config.HitIndicatorConfig;
 import com.rosymaple.hitindication.latesthits.ClientLatestHits;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -13,6 +15,26 @@ public class ClientEvents {
         if(event.phase == TickEvent.Phase.END)
             return;
 
+        if(ModKeyBindings.toggleHitIndication.isPressed()) {
+            HitIndicatorConfig.EnableHitIndication = !HitIndicatorConfig.EnableHitIndication;
+            HitIndicatorConfig.getConfig().get(HitIndicatorConfig.CATEGORY_NAME_INDICATOR, "enable_hit_indication", true).set(HitIndicatorConfig.EnableHitIndication);
+            HitIndicatorConfig.getConfig().save();
+        }
+
+        if(ModKeyBindings.toggleProximityIndicators.isPressed()) {
+            HitIndicatorConfig.EnableProximityIndicators = !HitIndicatorConfig.EnableProximityIndicators;
+            HitIndicatorConfig.getConfig().get(HitIndicatorConfig.CATEGORY_NAME_INDICATOR, "enable_proximity_indicators", false).set(HitIndicatorConfig.EnableProximityIndicators);
+            HitIndicatorConfig.getConfig().save();
+        }
+
+        if(ModKeyBindings.toggleEdgeOfScreenMode.isPressed()) {
+            HitIndicatorConfig.EdgeOfScreenMode = !HitIndicatorConfig.EdgeOfScreenMode;
+            HitIndicatorConfig.getConfig().get(HitIndicatorConfig.CATEGORY_NAME_INDICATOR, "edge_of_screen_mode", false).set(HitIndicatorConfig.EdgeOfScreenMode);
+            HitIndicatorConfig.getConfig().save();
+        }
+
         ClientLatestHits.tick();
     }
+
+
 }

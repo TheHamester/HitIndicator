@@ -8,7 +8,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.IProjectile;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -19,6 +23,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.vecmath.Vector2d;
 import javax.vecmath.Vector3d;
+import java.util.List;
 
 @Mod.EventBusSubscriber(modid = HitIndication.MODID, value = Side.CLIENT)
 public class RenderEvents {
@@ -48,8 +53,10 @@ public class RenderEvents {
 
     private static String lastHitColorString = "FF0000";
     private static String lastBlockColorString = "0000FF";
+    private static String lastProximityColorString = "2F86C4";
     private static float hitColorR = 1.0F, hitColorG = 0.0F, hitColorB = 0.0F;
     private static float blockColorR = 0.0F, blockColorG = 0.0F, blockColorB = 1.0F;
+    private static float proximityColorR = 0.18431F, proximityColorG = 0.52549F, proximityColorB = 0.76862F;
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
@@ -57,6 +64,9 @@ public class RenderEvents {
             return;
 
         Minecraft mc = Minecraft.getMinecraft();
+        if(mc.player == null || mc.world == null)
+            return;
+
         TextureManager textureManager = mc.getTextureManager();
 
         ScaledResolution scaledResolution = new ScaledResolution(mc);
@@ -76,6 +86,17 @@ public class RenderEvents {
                 drawIndicator(hit, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
         }
 
+        if(HitIndicatorConfig.EnableProximityIndicators) {
+            List<Entity> entities = mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(mc.player.getPosition()).grow(HitIndicatorConfig.ProximityIndicatorRadius));
+            for(Entity e : entities) {
+                if(!(e instanceof IProjectile && (Math.abs(e.prevPosX - e.posX) > 0.1F || Math.abs(e.prevPosY - e.posY) > 0.1F || Math.abs(e.prevPosZ - e.posZ) > 0.1F)) && !(e instanceof EntityMob))
+                    continue;
+
+                HitIndicator indicator = new HitIndicator(e.posX, e.posY, e.posZ, HitIndicatorType.PROXIMITY, 0);
+                drawIndicator(indicator, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
+            }
+        }
+
         if(ClientLatestHits.currentHitMarker != null)
             drawHitMarker(ClientLatestHits.currentHitMarker, textureManager, screenMiddleX, screenMiddleY);
     }
@@ -83,6 +104,7 @@ public class RenderEvents {
     private static void updateColorsIfNeeded() {
         String currentHitColor = HitIndicatorConfig.HitIndicatorColor;
         String currentBlockColor = HitIndicatorConfig.BlockIndicatorColor;
+        String currentProximityColor = HitIndicatorConfig.ProximityIndicatorColor;
         if (!lastHitColorString.equals(currentHitColor)) {
             try {
                 int parsedValue = Integer.parseInt(currentHitColor, 16);
@@ -110,6 +132,20 @@ public class RenderEvents {
             }
             lastBlockColorString = currentBlockColor;
         }
+
+        if (!lastProximityColorString.equals(currentProximityColor)) {
+            try {
+                int parsedValue = Integer.parseInt(currentProximityColor, 16);
+                proximityColorR = (parsedValue >> 16 & 0xFF) / 255.0F;
+                proximityColorG = ((parsedValue >> 8) & 0xFF) / 255.0F;
+                proximityColorB = (parsedValue & 0xFF) / 255.0F;
+            } catch (Exception e) {
+                proximityColorR = 0.18431F;
+                proximityColorG = 0.52549F;
+                proximityColorB = 0.76862F;
+            }
+            lastProximityColorString = currentProximityColor;
+        }
     }
 
     private static void drawHitMarker(HitMarker hitMarker, TextureManager textureManager, int screenMiddleX, int screenMiddleY) {
@@ -133,10 +169,17 @@ public class RenderEvents {
         int distanceFromCrosshair = HitIndicatorConfig.DistanceFromCrosshair;
 
         float defaultScale = 1 + HitIndicatorConfig.IndicatorDefaultScale / 100.0f;
-        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_WIDTH * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
-        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor(INDICATOR_HEIGHT * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
+        int scaledTextureWidth = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor((hit.getType() == HitIndicatorType.PROXIMITY ? EDGE_INDICATOR_WIDTH : INDICATOR_WIDTH) * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
+        int scaledTextureHeight = hit.getType() != HitIndicatorType.ND_HIT ? (int)Math.floor((hit.getType() == HitIndicatorType.PROXIMITY ? EDGE_INDICATOR_HEIGHT : INDICATOR_HEIGHT) * defaultScale) : (int)Math.floor(ND_TEXTURE_SIZE * 1.25);
 
-        if(hit.getType() != HitIndicatorType.ND_HIT) {
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
+        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+            distanceFromCrosshair -= 10;
+            scaledTextureWidth *= 0.75F;
+            scaledTextureHeight *= 0.75F;
+        }
+
+        if(hit.getType() != HitIndicatorType.ND_HIT && hit.getType() != HitIndicatorType.PROXIMITY) {
             if (HitIndicatorConfig.SizeDependsOnDamage) {
                 float scale = MathHelper.clamp(hit.getDamagePercent() > 30 ? 1 + hit.getDamagePercent() / 125.0f : 1, 0, 3);
                 scaledTextureWidth = (int) Math.floor(scaledTextureWidth * scale);
@@ -144,7 +187,6 @@ public class RenderEvents {
             }
 
             if (HitIndicatorConfig.EnableDistanceScaling) {
-                float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
                 float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
                 float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
                 if (distanceScaling > 1) distanceScaling = 1;
@@ -154,14 +196,29 @@ public class RenderEvents {
             }
         }
 
-        bindTextureAndColor(textureManager, hit);
+        float opacity = hit.getType() != HitIndicatorType.PROXIMITY ?
+                (hit.getLifeTime() >= 25
+                        ? HitIndicatorConfig.IndicatorOpacity
+                        : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f) / 100.0F
+                : 1.0F - distanceFromPlayer / HitIndicatorConfig.ProximityIndicatorRadius;
+        int border = 2 * HitIndicatorConfig.ProximityIndicatorBorder;
+
+        bindTexture(textureManager, hit);
 
         GL11.glPushMatrix();
         GL11.glTranslatef(screenMiddleX, screenMiddleY, 0);
         if(hit.getType() != HitIndicatorType.ND_HIT)
             GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
+
+        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+            GL11.glColor4f(1, 1, 1, opacity);
+            Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
+        }
+
+        setColor(hit, opacity);
         Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - scaledTextureWidth / 2, screenMiddleY - scaledTextureHeight / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth, scaledTextureHeight, scaledTextureWidth, scaledTextureHeight);
+
         GL11.glColor4f(1, 1, 1, 1);
         GL11.glPopMatrix();
     }
@@ -184,8 +241,8 @@ public class RenderEvents {
             scaledTextureHeight = (int) Math.floor(scaledTextureHeight * scale);
         }
 
+        float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
         if (HitIndicatorConfig.EnableDistanceScaling) {
-            float distanceFromPlayer = calculateDistanceFromPlayer(hit.getLocation());
             float distanceScalingCutoff = HitIndicatorConfig.DistanceScalingCutoff;
             float distanceScaling = 1.0f - (distanceFromPlayer <= distanceScalingCutoff ? 0f : (distanceFromPlayer - distanceScalingCutoff) / 10.0f);
             if (distanceScaling > 1) distanceScaling = 1;
@@ -193,8 +250,6 @@ public class RenderEvents {
             scaledTextureWidth = (int) Math.floor(scaledTextureWidth * distanceScaling);
             scaledTextureHeight = (int) Math.floor(scaledTextureHeight * distanceScaling);
         }
-
-        bindTextureAndColor(textureManager, hit);
 
         int blitX, blitY;
         double targetAngle = -angleBetween;
@@ -218,6 +273,15 @@ public class RenderEvents {
             blitY = 2 * screenMiddleY - scaledTextureHeight;
         }
 
+        float opacity = hit.getType() != HitIndicatorType.PROXIMITY ?
+                (hit.getLifeTime() >= 25
+                        ? HitIndicatorConfig.IndicatorOpacity
+                        : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f) / 100.0F
+                : 1.0F - distanceFromPlayer / HitIndicatorConfig.ProximityIndicatorRadius;
+
+        bindTexture(textureManager, hit);
+        setColor(hit, opacity);
+
         GL11.glPushMatrix();
         GL11.glTranslatef(blitX + scaledTextureWidth / 2.0F, blitY + scaledTextureHeight / 2.0F, 0);
         GL11.glRotatef((float)angleBetween, 0, 0, 1);
@@ -230,21 +294,21 @@ public class RenderEvents {
         GL11.glPopMatrix();
     }
 
-    private static void bindTextureAndColor(TextureManager textureManager, HitIndicator hit) {
-        float opacity = hit.getLifeTime() >= 25
-                ? HitIndicatorConfig.IndicatorOpacity
-                : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f;
-        opacity /= 100.0f;
-
+    private static void bindTexture(TextureManager textureManager, HitIndicator hit) {
         if (HitIndicatorConfig.EdgeOfScreenMode) textureManager.bindTexture(EDGE_INDICATOR);
         else if (hit.getType() == HitIndicatorType.ND_HIT) textureManager.bindTexture(ND_HIT_INDICATOR);
         else if (hit.getType() == HitIndicatorType.HIT) textureManager.bindTexture(HIT_INDICATOR);
+        else if (hit.getType() == HitIndicatorType.PROXIMITY) textureManager.bindTexture(EDGE_INDICATOR);
         else textureManager.bindTexture(BLOCK_INDICATOR);
+    }
 
+    private static void setColor(HitIndicator hit, float opacity) {
         if (hit.getType() == HitIndicatorType.ND_HIT || hit.getType() == HitIndicatorType.HIT)
             GL11.glColor4f(hitColorR, hitColorG, hitColorB, opacity);
-        else
+        else if(hit.getType() == HitIndicatorType.BLOCK)
             GL11.glColor4f(blockColorR, blockColorG, blockColorB, opacity);
+        else
+            GL11.glColor4f(proximityColorR, proximityColorG, proximityColorB, opacity);
     }
 
     private static void bindMarkerTexture(TextureManager textureManager, HitMarkerType type, int lifetime) {

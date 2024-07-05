@@ -48,3 +48,20 @@ hitindication.gui.config.indicators.hit_indicator_color.tooltip=Determines the c
 
 hitindication.gui.config.indicators.block_indicator_color=Block Hit Indicator Color
 hitindication.gui.config.indicators.block_indicator_color.tooltip=Determines the color of the block indicator
+
+hitindication.gui.config.indicators.proximity_indicator_color=Proximity Indicator Color
+hitindication.gui.config.indicators.proximity_indicator_color.tooltip=Determines the color of the proximity indicator
+
+hitindication.gui.config.indicators.enable_proximity_indicators=Enable Proximity Indicators
+hitindication.gui.config.indicators.enable_proximity_indicators.tooltip=Enables proximity indicators
+
+hitindication.gui.config.indicators.proximity_indicator_radius=Proximity Indicator Radius
+hitindication.gui.config.indicators.proximity_indicator_radius.tooltip=Determines the radius within which proximity indicators will be shown
+
+hitindication.gui.config.indicators.proximity_indicator_border=Proximity Indicator Border
+hitindication.gui.config.indicators.proximity_indicator_border.tooltip=Determines the border radius of the proximity indicator for better contrast
+
+key.categories.hitindication=Hit Indication
+key.hitindication.toggle_hit_indication=Toggle Hit Indication
+key.hitindication.toggle_proximity_indicators=Toggle Proximity Indicators
+key.hitindication.toggle_edge_of_screen_mode=Toggle Edge of Screen Mode
