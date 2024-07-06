@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.AABB;
@@ -83,7 +84,7 @@ public class HitIndicationRenderer {
         if(HitIndicatorClientConfigs.EnableProximityIndicators.get()) {
             List<Entity> entities = mc.level.getEntitiesOfClass(Entity.class, new AABB(mc.player.blockPosition()).inflate(HitIndicatorClientConfigs.ProximityIndicatorRadius.get()));
             for(Entity e : entities) {
-                if(!(e instanceof Projectile proj && (Math.abs(proj.xOld - proj.getX()) > 0.1F || Math.abs(proj.yOld - proj.getY()) > 0.1F || Math.abs(proj.zOld - proj.getZ()) > 0.1F)) && !(e instanceof Monster))
+                if(!(e instanceof Projectile proj && (Math.abs(proj.xOld - proj.getX()) > 0.1F || Math.abs(proj.yOld - proj.getY()) > 0.1F || Math.abs(proj.zOld - proj.getZ()) > 0.1F)) && !(e instanceof Enemy))
                     continue;
 
                 HitIndicator indicator = new HitIndicator(e.getX(), e.getY(), e.getZ(), HitIndicatorType.PROXIMITY, 0);
@@ -196,6 +197,7 @@ public class HitIndicationRenderer {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = Mth.clamp(opacity, 0.0F, 1.0F);
         int border = 2 * HitIndicatorClientConfigs.ProximityIndicatorBorder.get();
 
         RenderSystem.enableBlend();
@@ -208,7 +210,7 @@ public class HitIndicationRenderer {
             gui.pose().mulPose(Axis.ZP.rotationDegrees((float)angleBetween));
         gui.pose().translate(-screenMiddleX, -screenMiddleY, 0);
 
-        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+        if(hit.getType() == HitIndicatorType.PROXIMITY && border > 0) {
             RenderSystem.setShaderColor(1, 1, 1, opacity);
             gui.blit(atlasLocation, screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
         }
@@ -278,6 +280,7 @@ public class HitIndicationRenderer {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = Mth.clamp(opacity, 0.0F, 1.0F);
 
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
