@@ -10,7 +10,7 @@ import net.minecraft.client.gui.AbstractGui;
 
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.MonsterEntity;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -31,6 +31,7 @@ public class RenderEvents {
     private static final ResourceLocation EDGE_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/edge_indicator.png");
     private static final ResourceLocation BLOCK_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/indicator_block.png");
     private static final ResourceLocation ND_HIT_INDICATOR = new ResourceLocation(HitIndication.MODID, "textures/hit/nd_person_damage.png");
+
     private static final ResourceLocation[] MARKER_CRIT = {
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit1.png"),
             new ResourceLocation(HitIndication.MODID, "textures/hit/marker_crit2.png"),
@@ -60,7 +61,7 @@ public class RenderEvents {
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
-        if(event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE)
+        if(event.getType() != RenderGameOverlayEvent.ElementType.ALL)
             return;
 
         Minecraft mc = Minecraft.getInstance();
@@ -87,14 +88,13 @@ public class RenderEvents {
         if(HitIndicatorClientConfigs.EnableProximityIndicators.get()) {
             List<Entity> entities = mc.world.getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(mc.player.getPosition()).grow(HitIndicatorClientConfigs.ProximityIndicatorRadius.get()));
             for(Entity e : entities) {
-                if(!(e instanceof ProjectileEntity && (Math.abs(e.prevPosX - e.getPosX()) > 0.1F || Math.abs(e.prevPosY - e.getPosY()) > 0.1F || Math.abs(e.prevPosZ - e.getPosZ()) > 0.1F)) && !(e instanceof MonsterEntity))
+                if(!(e instanceof ProjectileEntity && (Math.abs(e.prevPosX - e.getPosX()) > 0.1F || Math.abs(e.prevPosY - e.getPosY()) > 0.1F || Math.abs(e.prevPosZ - e.getPosZ()) > 0.1F)) && !(e instanceof IMob))
                     continue;
 
                 HitIndicator indicator = new HitIndicator(e.getPosX(), e.getPosY(), e.getPosZ(), HitIndicatorType.PROXIMITY, 0);
                 drawIndicator(event.getMatrixStack(), indicator, textureManager, screenMiddleX, screenMiddleY, playerPos, lookVec);
             }
         }
-
         if(ClientLatestHits.currentHitMarker != null)
             drawHitMarker(event.getMatrixStack(), textureManager, ClientLatestHits.currentHitMarker, screenMiddleX, screenMiddleY);
     }
@@ -199,6 +199,7 @@ public class RenderEvents {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = MathHelper.clamp(opacity, 0.0F, 1.0F);
         int border = 2 * HitIndicatorClientConfigs.ProximityIndicatorBorder.get();
 
         bindTexture(textureManager, hit);
@@ -209,7 +210,7 @@ public class RenderEvents {
             GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
 
-        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+        if(hit.getType() == HitIndicatorType.PROXIMITY && border > 0) {
             GL11.glColor4f(1, 1, 1, opacity);
             AbstractGui.blit(stack, screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
         }
@@ -277,6 +278,7 @@ public class RenderEvents {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = MathHelper.clamp(opacity, 0.0F, 1.0F);
 
         bindTexture(textureManager, hit);
         setColor(hit, opacity);
