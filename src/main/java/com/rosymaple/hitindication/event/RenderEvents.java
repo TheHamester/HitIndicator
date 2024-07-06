@@ -60,7 +60,7 @@ public class RenderEvents {
 
     @SubscribeEvent
     public static void onRender(RenderGameOverlayEvent.Post event) {
-        if(event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE)
+        if(event.getType() != RenderGameOverlayEvent.ElementType.ALL)
             return;
 
         Minecraft mc = Minecraft.getMinecraft();
@@ -201,6 +201,7 @@ public class RenderEvents {
                         ? HitIndicatorConfig.IndicatorOpacity
                         : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorConfig.ProximityIndicatorRadius;
+        opacity = MathHelper.clamp(opacity, 0.0F, 1.0F);
         int border = 2 * HitIndicatorConfig.ProximityIndicatorBorder;
 
         bindTexture(textureManager, hit);
@@ -211,7 +212,7 @@ public class RenderEvents {
             GL11.glRotatef((float)angleBetween, 0, 0, 1);
         GL11.glTranslatef(-screenMiddleX, -screenMiddleY, 0);
 
-        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+        if(hit.getType() == HitIndicatorType.PROXIMITY && border > 0) {
             GL11.glColor4f(1, 1, 1, opacity);
             Gui.drawModalRectWithCustomSizedTexture(screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
         }
@@ -278,6 +279,7 @@ public class RenderEvents {
                         ? HitIndicatorConfig.IndicatorOpacity
                         : HitIndicatorConfig.IndicatorOpacity * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorConfig.ProximityIndicatorRadius;
+        opacity = MathHelper.clamp(opacity, 0.0F, 1.0F);
 
         bindTexture(textureManager, hit);
         setColor(hit, opacity);
