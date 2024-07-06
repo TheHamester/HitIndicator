@@ -195,6 +195,7 @@ public class RenderEvents {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = Mth.clamp(opacity, 0.0F, 1.0F);
         int border = 2 * HitIndicatorClientConfigs.ProximityIndicatorBorder.get();
 
         RenderSystem.enableBlend();
@@ -207,7 +208,7 @@ public class RenderEvents {
             stack.mulPose(Vector3f.ZP.rotationDegrees((float)angleBetween));
         stack.translate(-screenMiddleX, -screenMiddleY, 0);
 
-        if(hit.getType() == HitIndicatorType.PROXIMITY) {
+        if(hit.getType() == HitIndicatorType.PROXIMITY && border > 0) {
             RenderSystem.setShaderColor(1, 1, 1, opacity);
             Gui.blit(stack, screenMiddleX - (scaledTextureWidth + border) / 2, screenMiddleY - (scaledTextureHeight + border) / 2 - (hit.getType() == HitIndicatorType.ND_HIT ? 0 : distanceFromCrosshair), 0, 0, scaledTextureWidth + border, scaledTextureHeight + border, scaledTextureWidth + border, scaledTextureHeight + border);
         }
@@ -278,6 +279,7 @@ public class RenderEvents {
                         ? HitIndicatorClientConfigs.IndicatorOpacity.get()
                         : HitIndicatorClientConfigs.IndicatorOpacity.get() * hit.getLifeTime() / 25.0f) / 100.0F
                 : 1.0F - distanceFromPlayer / HitIndicatorClientConfigs.ProximityIndicatorRadius.get();
+        opacity = Mth.clamp(opacity, 0.0F, 1.0F);
 
         RenderSystem.enableBlend();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
