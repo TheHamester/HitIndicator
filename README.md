@@ -7,7 +7,6 @@
 [Modrinth](https://modrinth.com/mod/hit-indication)  
   
 If you're experiencing problems with this mod, when using Mohist Server, it is a known issue on the Mohist side https://github.com/MohistMC/Mohist/issues/2674  
-Also thank you everyone for 3 million downloads!!  
 
 # Changelog
 
