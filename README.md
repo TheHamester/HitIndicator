@@ -4,12 +4,11 @@ This mod adds indicators to show where you got damaged from, much like in games 
 
 This can be used in any modpack without asking for premission as long as you give substantial credit, a.k.a., a little more credit just having the mod in the Relations tab.
 
-* [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/hit-indication)
 * [Modrinth](https://modrinth.com/mod/hit-indication)  
 
 ## FAQ
 * Q. How do I configure the mod?  
-	A. You can configure mod by either modifying the config file located in ./config/hitindication-client.toml or using any external mod that generates config menus from config file, for example [Configured](https://legacy.curseforge.com/minecraft/mc-mods/configured).
+	A. You can configure mod by either modifying the config file located in ./config/hitindication-client.toml or using any external mod that generates config menus from config file.
 * Q. Will there be Fabric version?  
 	A. There's no Fabric or any other modding framework version planned at this moment
 * Q. Hit Indication does not work on server, what do I do?  
