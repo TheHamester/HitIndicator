@@ -4,27 +4,23 @@ This mod adds indicators to show where you got damaged from, much like in games 
 
 This can be used in any modpack without asking for premission as long as you give substantial credit, a.k.a., a little more credit just having the mod in the Relations tab.
 
-* [Curse Forge](https://www.curseforge.com/minecraft/mc-mods/hit-indication)
 * [Modrinth](https://modrinth.com/mod/hit-indication)  
 
 ## FAQ
 * Q. How do I configure the mod?  
-	A. You can configure mod by either modifying the config file located in ./config/hitindication-client.toml or using any external mod that generates config menus from config file, for example [Configured](https://legacy.curseforge.com/minecraft/mc-mods/configured).
+	A. You can configure mod by either modifying the config file located in ./config/hitindication-client.toml or using any external mod that generates config menus from config file.
 * Q. Will there be Fabric version?  
-	A. There's no Fabric or any other modding framework version planned at this moment
+	A. There's no Fabric or any other modding framework version planned at this moment.
 * Q. Hit Indication does not work on server, what do I do?  
 	A. If you're using version 1.16.5 on a Mohist server, this is a known issue on the Mohist side: https://github.com/MohistMC/Mohist/issues/2674
 
 
 ## Changelog
 
-### Update 1.5
-* Added proximity indicators, that are shown around the player when a mob or projectile gets close
-* Added config options to enable/disable proximity indicators
-* Added config options to modify color of proximity indicators
-* Added config option to modify the proximity show indicator radius
-* Added config option to modify width of white border around proximity indicator for better contrast
-* Added keybindings for toggling certain types of indicators
+### Update 2.0
+* Code refactor and optimazation
+* Added keybinds to toggle Hit Indication, Block Indication and Edge of Screen mode
+* Fixed indicators in Edge of Screen mode going over the HUD
 
 ### Update 1.4
 * Added config options for setting a color of the hit and block indicators

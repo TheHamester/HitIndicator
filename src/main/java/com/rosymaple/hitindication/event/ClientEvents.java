@@ -21,9 +21,9 @@ public class ClientEvents {
             HitIndicatorConfig.getConfig().save();
         }
 
-        if(ModKeyBindings.toggleProximityIndicators.isPressed()) {
-            HitIndicatorConfig.EnableProximityIndicators = !HitIndicatorConfig.EnableProximityIndicators;
-            HitIndicatorConfig.getConfig().get(HitIndicatorConfig.CATEGORY_NAME_INDICATOR, "enable_proximity_indicators", false).set(HitIndicatorConfig.EnableProximityIndicators);
+        if(ModKeyBindings.toggleBlockIndicators.isPressed()) {
+            HitIndicatorConfig.ShowBlueIndicators = !HitIndicatorConfig.ShowBlueIndicators;
+            HitIndicatorConfig.getConfig().get(HitIndicatorConfig.CATEGORY_NAME_INDICATOR, "show_block_indicators", false).set(HitIndicatorConfig.ShowBlueIndicators);
             HitIndicatorConfig.getConfig().save();
         }
 

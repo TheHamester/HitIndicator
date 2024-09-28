@@ -1,7 +1,6 @@
 package com.rosymaple.hitindication.config;
 
 import com.rosymaple.hitindication.HitIndication;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class HitIndicatorConfig {
     private static Configuration config = null;
@@ -35,12 +33,6 @@ public class HitIndicatorConfig {
     public static boolean EdgeOfScreenMode;
     public static String HitIndicatorColor;
     public static String BlockIndicatorColor;
-
-    public static String ProximityIndicatorColor;
-
-    public static boolean EnableProximityIndicators;
-    public static int ProximityIndicatorRadius;
-    public static int ProximityIndicatorBorder;
 
     public static void preInit() {
         File configFile = new File(Loader.instance().getConfigDir(), "HitIndication.cfg");
@@ -119,22 +111,6 @@ public class HitIndicatorConfig {
         Property blockIndicatorColor = config.get(CATEGORY_NAME_INDICATOR, "block_indicator_color", "0000FF");
         blockIndicatorColor.setLanguageKey("hitindication.gui.config.indicators.block_indicator_color");
 
-        Property proximityIndicatorColor = config.get(CATEGORY_NAME_INDICATOR, "proximity_indicator_color", "2F86C4");
-        proximityIndicatorColor.setLanguageKey("hitindication.gui.config.indicators.proximity_indicator_color");
-
-        Property enableProximityIndicators = config.get(CATEGORY_NAME_INDICATOR, "enable_proximity_indicators", false);
-        enableProximityIndicators.setLanguageKey("hitindication.gui.config.indicators.enable_proximity_indicators");
-
-        Property proximityIndicatorRadius = config.get(CATEGORY_NAME_INDICATOR, "proximity_indicator_radius", 10);
-        proximityIndicatorRadius.setLanguageKey("hitindication.gui.config.indicators.proximity_indicator_radius");
-        proximityIndicatorRadius.setMinValue(1);
-        proximityIndicatorRadius.setMaxValue(100);
-
-        Property proximityIndicatorBorder = config.get(CATEGORY_NAME_INDICATOR, "proximity_indicator_border", 0);
-        proximityIndicatorBorder.setLanguageKey("hitindication.gui.config.indicators.proximity_indicator_border");
-        proximityIndicatorBorder.setMinValue(0);
-        proximityIndicatorBorder.setMaxValue(10);
-
         List<String> propertyOrderIndicators = new ArrayList<>();
         propertyOrderIndicators.add(enableHitIndication.getName());
         propertyOrderIndicators.add(maxIndicatorCount.getName());
@@ -150,12 +126,8 @@ public class HitIndicatorConfig {
         propertyOrderIndicators.add(distanceScalingCutoff.getName());
         propertyOrderIndicators.add(enableHitMarkers.getName());
         propertyOrderIndicators.add(edgeOfScreenMode.getName());
-        propertyOrderIndicators.add(enableProximityIndicators.getName());
-        propertyOrderIndicators.add(proximityIndicatorRadius.getName());
-        propertyOrderIndicators.add(proximityIndicatorBorder.getName());
         propertyOrderIndicators.add(hitIndicatorColor.getName());
         propertyOrderIndicators.add(blockIndicatorColor.getName());
-        propertyOrderIndicators.add(proximityIndicatorColor.getName());
         config.setCategoryPropertyOrder(CATEGORY_NAME_INDICATOR, propertyOrderIndicators);
 
         if(readFromConfigFile) {
@@ -175,10 +147,6 @@ public class HitIndicatorConfig {
             EdgeOfScreenMode = edgeOfScreenMode.getBoolean();
             HitIndicatorColor = hitIndicatorColor.getString();
             BlockIndicatorColor = blockIndicatorColor.getString();
-            ProximityIndicatorColor = proximityIndicatorColor.getString();
-            EnableProximityIndicators = enableProximityIndicators.getBoolean();
-            ProximityIndicatorRadius = proximityIndicatorRadius.getInt();
-            ProximityIndicatorBorder = proximityIndicatorBorder.getInt();
         }
 
         if(config.hasChanged())
@@ -189,7 +157,7 @@ public class HitIndicatorConfig {
     public static class ConfigEventHandler {
         @SubscribeEvent(priority = EventPriority.LOWEST)
         public static void onEvent(ConfigChangedEvent.OnConfigChangedEvent event) {
-            if(event.getModID() == HitIndication.MODID) {
+            if(event.getModID().equals(HitIndication.MODID)) {
                 syncFromGui();
             }
         }
