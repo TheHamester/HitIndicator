@@ -4,7 +4,7 @@ This mod adds indicators to show where you got damaged from, much like in games 
 
 This can be used in any modpack without asking for premission as long as you give substantial credit.
 
-Starting from version 2.0 of Hit Indication, versions other than 1.18.2, 1.16.5 and 1.12.2 will not be recieving any new updated for the sake of my mental health. Older versions are still available to download for currently unsupported Minecraft versions.
+Starting from version 2.0 of Hit Indication, versions other than 1.18.2, 1.16.5 and 1.12.2 will not be receiving any new updated for the sake of my mental health. Older versions are still available to download for currently unsupported Minecraft versions.
 
 * [Modrinth](https://modrinth.com/mod/hit-indication)  
 
