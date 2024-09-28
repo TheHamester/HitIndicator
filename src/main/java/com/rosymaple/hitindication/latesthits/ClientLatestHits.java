@@ -38,7 +38,7 @@ public class ClientLatestHits {
     }
 
     public static void tick() {
-        for(int i = latestHitIndicators.size()-1; i >= 0; i--) {
+        for(int i = latestHitIndicators.size() - 1; i >= 0; i--) {
             HitIndicator hitIndicator = latestHitIndicators.get(i);
             hitIndicator.tick();
             if(hitIndicator.expired())
@@ -50,7 +50,6 @@ public class ClientLatestHits {
             if(currentHitMarker.expired())
                 currentHitMarker = null;
         }
-
     }
 
     public static void clear() {

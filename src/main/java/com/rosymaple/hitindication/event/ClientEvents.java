@@ -25,9 +25,9 @@ public class ClientEvents {
             HitIndicatorClientConfigs.EnableHitIndication.save();
         }
 
-        if(ModKeyBindings.toggleProximityIndicators.consumeClick()) {
-            HitIndicatorClientConfigs.EnableProximityIndicators.set(!HitIndicatorClientConfigs.EnableProximityIndicators.get());
-            HitIndicatorClientConfigs.EnableProximityIndicators.save();
+        if(ModKeyBindings.toggleBlockIndicators.consumeClick()) {
+            HitIndicatorClientConfigs.ShowBlueIndicators.set(!HitIndicatorClientConfigs.ShowBlueIndicators.get());
+            HitIndicatorClientConfigs.ShowBlueIndicators.save();
         }
 
         if(ModKeyBindings.toggleEdgeOfScreenMode.consumeClick()) {
