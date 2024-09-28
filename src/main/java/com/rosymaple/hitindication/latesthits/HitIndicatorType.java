@@ -1,9 +1,9 @@
 package com.rosymaple.hitindication.latesthits;
 
 public enum HitIndicatorType {
-    HIT(0), BLOCK(1), ND_HIT(2), PROXIMITY(3);
+    HIT(0), BLOCK(1), ND_HIT(2);
 
-    int type;
+    final int type;
 
     HitIndicatorType(int type) {
         this.type = type;
@@ -13,7 +13,6 @@ public enum HitIndicatorType {
         switch(integerType) {
             case 1: return HitIndicatorType.BLOCK;
             case 2: return HitIndicatorType.ND_HIT;
-            case 3: return HitIndicatorType.PROXIMITY;
             default: return HitIndicatorType.HIT;
         }
     }

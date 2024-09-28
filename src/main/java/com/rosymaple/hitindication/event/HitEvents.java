@@ -5,10 +5,12 @@ import com.rosymaple.hitindication.latesthits.HitIndicatorType;
 import com.rosymaple.hitindication.latesthits.HitMarkerType;
 import com.rosymaple.hitindication.latesthits.PacketsHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.entity.projectile.PotionEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Effects;
 import net.minecraft.potion.PotionUtils;
@@ -32,36 +34,25 @@ import java.util.Optional;
 public class HitEvents {
     @SubscribeEvent
     public static void onAttack(LivingDamageEvent event) {
-        if(event.getSource().getImmediateSource() instanceof PotionEntity)
+        Entity attackerProjectile = event.getSource().getImmediateSource();
+        Entity attacker = event.getSource().getTrueSource();
+        Entity target = event.getEntity();
+        if(attackerProjectile instanceof PotionEntity)
             return;
 
-        if(!(event.getSource().getTrueSource() instanceof LivingEntity)
-                || event.getSource().getTrueSource().getUniqueID().equals(event.getEntity().getUniqueID())) {
+        if(attacker instanceof ServerPlayerEntity)
+            if(attackerProjectile instanceof ProjectileEntity && !attacker.getUniqueID().equals(target.getUniqueID()))
+                PacketsHelper.addHitMarker((ServerPlayerEntity)attacker, HitMarkerType.CRIT);
 
-            if(!(event.getEntity() instanceof ServerPlayerEntity))
-                return;
-
-            ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
-            int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
-
-            PacketsHelper.addHitIndicator(player, null, HitIndicatorType.ND_HIT, damagePercent, false);
-            return;
-        }
-
-        if(event.getSource().getTrueSource() instanceof ServerPlayerEntity) {
-            if(event.getSource().getImmediateSource() instanceof ProjectileEntity)
-                PacketsHelper.addHitMarker((ServerPlayerEntity)event.getSource().getTrueSource(), HitMarkerType.CRIT);
-        }
-
-        if(!(event.getEntityLiving() instanceof ServerPlayerEntity))
+        if(!(target instanceof ServerPlayerEntity))
             return;
 
-        ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
-        LivingEntity source = (LivingEntity)event.getSource().getTrueSource();
-
-        int damagePercent = (int)Math.floor((event.getAmount() / player.getMaxHealth() * 100));
-
-        PacketsHelper.addHitIndicator(player, source, HitIndicatorType.HIT, damagePercent, false);
+        ServerPlayerEntity targetPlayer = (ServerPlayerEntity)target;
+        int damagePercent = (int)Math.floor((event.getAmount() / targetPlayer.getMaxHealth() * 100));
+        if(!(attacker instanceof LivingEntity) || attacker.getUniqueID().equals(target.getUniqueID()))
+            PacketsHelper.addHitIndicator(targetPlayer, null, HitIndicatorType.ND_HIT, damagePercent, false);
+        else
+            PacketsHelper.addHitIndicator(targetPlayer, (LivingEntity)attacker, HitIndicatorType.HIT, damagePercent, false);
     }
 
     @SubscribeEvent
@@ -70,52 +61,47 @@ public class HitEvents {
             return;
 
         ServerPlayerEntity player = (ServerPlayerEntity)event.getPlayer();
-
         PacketsHelper.addHitMarker(player, HitMarkerType.CRIT);
     }
 
     @SubscribeEvent
     public static void onKill(LivingDeathEvent event) {
-        if(!(event.getSource().getTrueSource() instanceof ServerPlayerEntity))
+        Entity attacker = event.getSource().getTrueSource();
+        Entity target = event.getEntity();
+        if(!(attacker instanceof ServerPlayerEntity))
+            return;
+        if(attacker.getUniqueID().equals(target.getUniqueID()))
             return;
 
-        if(event.getSource().getTrueSource().getUniqueID().equals(event.getEntityLiving().getUniqueID()))
-            return;
-
-        ServerPlayerEntity player = (ServerPlayerEntity)event.getSource().getTrueSource();
-
-        PacketsHelper.addHitMarker(player, HitMarkerType.KILL);
+        PacketsHelper.addHitMarker((ServerPlayerEntity)attacker, HitMarkerType.KILL);
     }
 
     @SubscribeEvent
     public static void onBlock(LivingAttackEvent event) {
-        if(event.getSource().getImmediateSource() instanceof PotionEntity)
+        Entity attackerProjectile = event.getSource().getImmediateSource();
+        Entity attacker = event.getSource().getTrueSource();
+        LivingEntity target = event.getEntityLiving();
+        if(attackerProjectile instanceof PotionEntity)
             return;
-        if(!(event.getSource().getTrueSource() instanceof LivingEntity))
+        if(!(attacker instanceof LivingEntity))
             return;
 
-        if(event.getSource().getTrueSource() instanceof ServerPlayerEntity) {
-            LivingEntity target = event.getEntityLiving();
-            ServerPlayerEntity source = (ServerPlayerEntity)event.getSource().getTrueSource();
+        LivingEntity livingAttacker = (LivingEntity)attacker;
 
-            boolean targetIsBlocking = canBlockDamageSource(target, event.getSource());
-            boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), target.getActiveItemStack(), target, source);
+        ItemStack itemInHand = livingAttacker.getHeldItemMainhand();
+        boolean targetIsBlocking = canBlockDamageSource(target, event.getSource());
+        boolean shieldAboutToBreak = itemInHand.getItem().canDisableShield(itemInHand, target.getActiveItemStack(), target, livingAttacker);
+        if(targetIsBlocking) {
+            if(target instanceof ServerPlayerEntity) {
+                ServerPlayerEntity targetPlayer = (ServerPlayerEntity)target;
+                PacketsHelper.addHitIndicator(targetPlayer, livingAttacker, HitIndicatorType.BLOCK, shieldAboutToBreak ? 125 : 0, false);
+            }
 
-            if(targetIsBlocking && shieldAboutToBreak)
-                PacketsHelper.addHitMarker(source, HitMarkerType.CRIT);
+            if(attacker instanceof ServerPlayerEntity && shieldAboutToBreak) {
+                ServerPlayerEntity attackingPlayer = (ServerPlayerEntity)attacker;
+                PacketsHelper.addHitMarker(attackingPlayer, HitMarkerType.CRIT);
+            }
         }
-
-        if(!(event.getEntityLiving() instanceof ServerPlayerEntity))
-            return;
-
-        ServerPlayerEntity player = (ServerPlayerEntity)event.getEntityLiving();
-        LivingEntity source = (LivingEntity)event.getSource().getTrueSource();
-
-        boolean playerIsBlocking = canBlockDamageSource(player, event.getSource());
-        boolean shieldAboutToBreak = source.getHeldItemMainhand().getItem().canDisableShield(source.getHeldItemMainhand(), player.getActiveItemStack(), player, source);
-
-        if(playerIsBlocking)
-            PacketsHelper.addHitIndicator(player, source, HitIndicatorType.BLOCK, shieldAboutToBreak ? 125 : 0, false);
     }
 
     @SubscribeEvent
@@ -146,17 +132,16 @@ public class HitEvents {
                 continue;
 
             if(damagingPotion || hasNegativeEffects) {
-                if(instantDamage.isPresent()) {
+                if(instantDamage.isPresent())
                     damagePercent = (int)Math.floor(applyPotionDamageCalculations(player, DamageSource.MAGIC, 3*(2<<instantDamage.get().getAmplifier())) / player.getMaxHealth() * 100);
-                }
 
                 PacketsHelper.addHitIndicator(player, source, HitIndicatorType.HIT, damagePercent, hasNegativeEffects && !damagingPotion);
             }
         }
     }
 
-    private static boolean canBlockDamageSource(LivingEntity entity, DamageSource damageSourceIn)
-    {
+    // LivingEntity.canBlockDamageSource
+    private static boolean canBlockDamageSource(LivingEntity entity, DamageSource damageSourceIn) {
         if (!damageSourceIn.isUnblockable() && entity.isActiveItemStackBlocking())
         {
             Vector3d vec3d = damageSourceIn.getDamageLocation();
@@ -167,26 +152,19 @@ public class HitEvents {
                 Vector3d vec3d2 = vec3d.subtractReverse(new Vector3d(entity.getPosX(), entity.getPosY(), entity.getPosZ())).normalize();
                 vec3d2 = new Vector3d(vec3d2.x, 0.0D, vec3d2.z);
 
-                if (vec3d2.dotProduct(vec3d1) < 0.0D)
-                {
-                    return true;
-                }
+                return vec3d2.dotProduct(vec3d1) < 0.0D;
             }
         }
 
         return false;
     }
 
-    private static float applyPotionDamageCalculations(ServerPlayerEntity player, DamageSource source, float damage)
-    {
+    // Player.applyPotionDamageCalculations
+    private static float applyPotionDamageCalculations(ServerPlayerEntity player, DamageSource source, float damage) {
         if (source.isDamageAbsolute())
-        {
             return damage;
-        }
-        else
-        {
-            if (player.isPotionActive(Effects.RESISTANCE) && source != DamageSource.OUT_OF_WORLD)
-            {
+        else {
+            if (player.isPotionActive(Effects.RESISTANCE) && source != DamageSource.OUT_OF_WORLD) {
                 int i = (player.getActivePotionEffect(Effects.RESISTANCE).getAmplifier() + 1) * 5;
                 int j = 25 - i;
                 float f = damage * (float)j;
@@ -194,22 +172,14 @@ public class HitEvents {
             }
 
             if (damage <= 0.0F)
-            {
                 return 0.0F;
-            }
-            else
-            {
+            else {
                 int k = EnchantmentHelper.getEnchantmentModifierDamage(player.getArmorInventoryList(), source);
-
                 if (k > 0)
-                {
                     damage = CombatRules.getDamageAfterMagicAbsorb(damage, (float)k);
-                }
 
                 return damage;
             }
         }
     }
-
-
 }

@@ -15,13 +15,9 @@
   "hitindication.configgui.edge_of_screen_mode": "Edge of Screen Mode",
   "hitindication.configgui.hit_indicator_color": "Hit Indicator Color",
   "hitindication.configgui.block_indicator_color": "Block Hit Indicator Color",
-  "hitindication.configgui.proximity_indicator_color": "Proximity Hit Indicator Color",
-  "hitindication.configgui.enable_proximity_indicators": "Enable Proximity Indicators",
-  "hitindication.configgui.proximity_indicator_radius": "Proximity Indicator Radius",
-  "hitindication.configgui.proximity_indicator_border": "Proximity Indicator Border",
 
   "key.categories.hitindication": "Hit Indication",
   "key.hitindication.toggle_hit_indication": "Toggle Hit Indication",
-  "key.hitindication.toggle_proximity_indicators": "Toggle Proximity Indicators",
+  "key.hitindication.toggle_block_indicators": "Toggle Block Indicators",
   "key.hitindication.toggle_edge_of_screen_mode": "Toggle Edge of Screen Mode"
 }
