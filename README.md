@@ -15,10 +15,12 @@ This can be used in any modpack without asking for premission as long as you giv
 	A. If you're using version 1.16.5 on a Mohist server, this is a known issue on the Mohist side: https://github.com/MohistMC/Mohist/issues/2674
 
 
+Starting from version 2.0 of Hit Indication, versions other than 1.18.2, 1.16.5 and 1.12.2 will not be recieving any new updated for the sake of my mental health. Older versions are still available to download for currently unsupported Minecraft versions.
+
 ## Changelog
 
 ### Update 2.0
-* Code refactor and optimazation
+* Code refactor and optimization
 * Added keybinds to toggle Hit Indication, Block Indication and Edge of Screen mode
 * Fixed indicators in Edge of Screen mode going over the HUD
 
